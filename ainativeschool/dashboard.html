@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Your cognitive intelligence dashboard — AI Native Schools" />
+    <title>Dashboard — AI Native Schools</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="student-layout">
+        <!-- Nav -->
+        <nav class="student-nav">
+            <div class="student-nav-brand">AI Native Schools</div>
+            <div class="student-nav-actions">
+                <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                <button class="btn btn-ghost btn-sm" id="logout-btn">Sign Out</button>
+            </div>
+        </nav>
+
+        <!-- Welcome -->
+        <div class="student-welcome">
+            <div class="student-welcome-eyebrow">Student Portal</div>
+            <h1 id="welcome-name">Welcome</h1>
+            <p id="welcome-meta">Loading...</p>
+        </div>
+
+        <!-- Assessment Status -->
+        <div id="assessment-section">
+            <!-- Will be populated by JS -->
+        </div>
+
+        <!-- Report Section (visible only if completed) -->
+        <div id="report-section" style="display:none">
+            <!-- Will be populated by JS -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { getStudentInSchool, getSession, saveSession } from './js/storage.js';
+        import { requireAuth, logout } from './js/session.js';
+        import { initThemeToggle } from './js/ui.js';
+
+        const session = requireAuth(['student']);
+        if (!session) throw new Error('Redirecting...');
+        initThemeToggle();
+
+        // Get full student data
+        const student = getStudentInSchool(session.schoolCode, session.studentId);
+
+        document.getElementById('welcome-name').textContent = `Welcome, ${session.studentName}`;
+        document.getElementById('welcome-meta').textContent = `${session.schoolName} · Class ${session.studentClass} · ID: ${session.studentId}`;
+
+        const assessmentSection = document.getElementById('assessment-section');
+        const reportSection = document.getElementById('report-section');
+
+        if (!student || !student.psychometricCompleted) {
+            // Show assessment prompt
+            assessmentSection.innerHTML = `
+        <div class="report-card" style="text-align:center;padding:40px;animation:fadeUp 0.5s ease both;animation-delay:0.1s">
+          <div style="font-size:48px;margin-bottom:16px">🧠</div>
+          <h2 style="margin-bottom:8px">Cognitive Assessment</h2>
+          <p style="color:var(--muted);max-width:400px;margin:0 auto 24px">Complete the OCEAN Psychometric Assessment to unlock your cognitive profile and personalized learning insights.</p>
+          <a href="test.html" class="btn btn-primary" style="max-width:260px;margin:0 auto">Start Assessment</a>
+          <p style="font-size:12px;color:var(--muted);margin-top:16px">Takes approximately 10-15 minutes</p>
+        </div>
+      `;
+        } else {
+            // Show completion status + report summary
+            assessmentSection.innerHTML = `
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(46,125,107,0.1);color:var(--success)">✓</div>
+            <div class="stat-label">Assessment</div>
+            <div class="stat-value" style="font-size:20px">Completed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon" style="background:rgba(61,90,58,0.1);color:var(--accent)">🧠</div>
+            <div class="stat-label">Profile</div>
+            <div class="stat-value" style="font-size:20px">${student.psychometricReport?.dominantTrait || 'Available'}</div>
+          </div>
+        </div>
+      `;
+
+            // Show report
+            if (student.psychometricReport) {
+                const r = student.psychometricReport;
+                let reportHTML = '';
+
+                // Narrative
+                if (r.narrative) {
+                    reportHTML += `
+            <div class="report-card" style="animation:fadeUp 0.5s ease both;animation-delay:0.15s">
+              <div class="report-card-header">
+                <div class="report-card-icon" style="background:var(--accent-light);color:var(--accent)">📖</div>
+                <div>
+                  <div class="report-card-label">Your Story</div>
+                  <div class="report-card-title">Cognitive Narrative</div>
+                </div>
+              </div>
+              <div class="report-card-body">${r.narrative}</div>
+            </div>
+          `;
+                }
+
+                // OCEAN scores
+                if (r.scores) {
+                    const traits = { O: 'Openness', C: 'Conscientiousness', E: 'Extraversion', A: 'Agreeableness', N: 'Neuroticism' };
+                    reportHTML += '<div class="report-card" style="animation:fadeUp 0.5s ease both;animation-delay:0.2s">';
+                    reportHTML += '<div class="report-card-label" style="margin-bottom:16px">OCEAN Profile</div>';
+                    for (const [key, label] of Object.entries(traits)) {
+                        const score = r.scores[key] || 0;
+                        const pct = Math.min(100, Math.max(0, score));
+                        reportHTML += `
+              <div style="margin-bottom:14px">
+                <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+                  <span style="font-weight:500">${label}</span>
+                  <span style="color:var(--muted)">${Math.round(pct)}%</span>
+                </div>
+                <div style="height:8px;border-radius:4px;background:var(--soft);overflow:hidden">
+                  <div style="height:100%;width:${pct}%;border-radius:4px;background:var(--accent);transition:width 0.8s cubic-bezier(.22,.68,0,1.2)"></div>
+                </div>
+              </div>`;
+                    }
+                    reportHTML += '</div>';
+                }
+
+                // Date / time
+                if (r.dateTaken) {
+                    reportHTML += `<p style="font-size:12px;color:var(--muted);margin-top:16px;text-align:center">Completed on ${r.dateTaken}${r.completionTime ? ` · ${Math.round(r.completionTime / 60)} minutes` : ''}</p>`;
+                }
+
+                reportSection.innerHTML = reportHTML;
+                reportSection.style.display = 'block';
+            }
+        }
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout());
+    </script>
+</body>
+
+</html>

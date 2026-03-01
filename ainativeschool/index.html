@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI Native Schools — Sign in to access your cognitive intelligence platform." />
+    <title>Sign In — AI Native Schools</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="login-page">
+        <!-- LEFT PANEL -->
+        <div class="login-left">
+            <div>
+                <div class="login-brand">
+                    <div class="login-brand-icon">☆</div>
+                    <span>AI Native Schools</span>
+                </div>
+                <div class="login-brand-sub">Cognitive Intelligence Platform</div>
+            </div>
+
+            <div class="login-hero">
+                <div class="login-hero-label" id="hero-label">Student Portal</div>
+                <h1 style="font-size: 40px; line-height: 1.1;">Early Detection.<br>Measurable Growth.<br><em>Cognitive
+                        Intelligence<br>for Every Student.</em></h1>
+                <p>
+                    <span style="display:block;margin-bottom:8px">✓ Identify risk early.</span>
+                    <span style="display:block;margin-bottom:8px">✓ Map hidden talent.</span>
+                    <span style="display:block;margin-bottom:8px">✓ Strengthen emotional resilience.</span>
+                    <span style="display:block;margin-bottom:16px">✓ Track growth longitudinally.</span>
+                </p>
+            </div>
+
+            <div class="login-stats">
+                <div class="login-stat-item">
+                    <div class="login-stat-value">12K+</div>
+                    <div class="login-stat-label">Students</div>
+                </div>
+                <div class="login-stat-item">
+                    <div class="login-stat-value">340+</div>
+                    <div class="login-stat-label">Schools</div>
+                </div>
+                <div class="login-stat-item">
+                    <div class="login-stat-value">98%</div>
+                    <div class="login-stat-label">Accuracy</div>
+                </div>
+            </div>
+
+            <!-- ROADMAP -->
+            <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div
+                    style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--muted); margin-bottom: 16px; font-weight: 700;">
+                    System Implementation Roadmap</div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items:flex-start">
+                    <div
+                        style="width:24px; height:24px; border-radius:50%; background:var(--accent); color:white; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0;">
+                        ✓</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 600;">Phase 1: Psychometric Infrastructure</div>
+                        <div style="font-size: 12px; color: var(--muted);">Data core and secure assessment flow.</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items:flex-start">
+                    <div
+                        style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.1); border: 1px dashed var(--accent); color:var(--text); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0;">
+                        2</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 600;">Phase 2: Predictive AI + Intervention</div>
+                        <div style="font-size: 12px; color: var(--muted);">Active rollout. Deep behavioral indices.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-bottom: 12px; align-items:flex-start">
+                    <div
+                        style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.05); color:var(--muted); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0;">
+                        3</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 600; color: var(--muted);">Phase 3: District
+                            Intelligence Network</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; align-items:flex-start">
+                    <div
+                        style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,0.05); color:var(--muted); display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:bold; flex-shrink:0;">
+                        4</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 600; color: var(--muted);">Phase 4: National Cognitive
+                            Grid</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="login-right">
+            <div class="login-card-wrap">
+                <!-- Role Toggle Tabs -->
+                <div class="role-toggle" id="role-toggle">
+                    <button class="role-tab active" data-role="student" id="tab-student">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                        Student
+                    </button>
+                    <button class="role-tab" data-role="admin" id="tab-admin">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                        </svg>
+                        School Admin
+                    </button>
+                    <div class="role-tab-slider" id="role-slider"></div>
+                </div>
+
+                <div class="login-card-header">
+                    <div class="login-card-eyebrow" id="login-eyebrow">Student Access</div>
+                    <h2 id="login-heading">Welcome back</h2>
+                    <p id="login-subtitle">Sign in to continue your cognitive journey.</p>
+                </div>
+
+                <form id="login-form" autocomplete="off" novalidate>
+                    <div class="form-group">
+                        <input type="text" id="schoolCode" class="input-field" placeholder=" " maxlength="8"
+                            autocomplete="off" />
+                        <label for="schoolCode" class="floating-label">School Code</label>
+                    </div>
+
+                    <!-- Student: ID field -->
+                    <div class="form-group" id="field-studentId">
+                        <input type="text" id="studentId" class="input-field" placeholder=" " autocomplete="off" />
+                        <label for="studentId" class="floating-label">Student ID / Admission No.</label>
+                    </div>
+
+                    <!-- Admin: Email field (hidden by default) -->
+                    <div class="form-group" id="field-adminEmail" style="display:none">
+                        <input type="email" id="adminEmail" class="input-field" placeholder=" " autocomplete="off" />
+                        <label for="adminEmail" class="floating-label">Admin Email</label>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="password" class="input-field" placeholder=" "
+                                autocomplete="off" />
+                            <button type="button" class="password-toggle" id="toggle-password"
+                                aria-label="Toggle password visibility"></button>
+                        </div>
+                        <label for="password" class="floating-label">Password</label>
+                    </div>
+
+                    <div id="forgot-password-row" style="text-align: right; margin-top: -12px; margin-bottom: 20px;">
+                        <button type="button" class="link-btn" id="forgot-password-btn">Forgot password?</button>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="login-btn">
+                        <span id="login-btn-text">Sign In</span>
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <div class="login-footer-divider" id="login-footer-divider">Are you an admin?</div>
+                    <button class="btn btn-secondary" onclick="window.location.href='signup.html'"
+                        id="create-school-btn">
+                        Create School Account
+                    </button>
+                    <div class="login-footer-text">
+                        <span>© 2025 AI Native Schools</span>
+                        <span class="secure-badge">Secure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Theme Toggle (floating) -->
+    <button id="theme-toggle" class="btn-icon" style="position:fixed;top:16px;right:16px;z-index:100"></button>
+
+    <!-- PASSWORD RESET MODAL -->
+    <div class="modal-overlay" id="reset-modal">
+        <div class="modal-content">
+            <!-- Step 1: Identify -->
+            <div id="reset-step-1">
+                <div class="modal-header">
+                    <h2>Reset Password</h2>
+                    <button class="modal-close" id="close-reset-modal" aria-label="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Enter your school code and student ID to
+                    verify your identity.</p>
+                <form id="reset-step1-form" autocomplete="off" novalidate>
+                    <div class="form-group">
+                        <input type="text" id="reset-schoolCode" class="input-field" placeholder=" " maxlength="8" />
+                        <label for="reset-schoolCode" class="floating-label">School Code</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="reset-studentId" class="input-field" placeholder=" " />
+                        <label for="reset-studentId" class="floating-label">Student ID</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="reset-step1-btn">
+                        <span id="reset-step1-text">Verify Identity</span>
+                    </button>
+                </form>
+                <p id="reset-attempts-msg" style="font-size:12px;color:var(--muted);margin-top:12px;text-align:center">
+                </p>
+            </div>
+
+            <!-- Step 2: DOB Verification -->
+            <div id="reset-step-2" style="display:none">
+                <div class="modal-header">
+                    <h2>Security Check</h2>
+                    <button class="modal-close" onclick="closeResetModal()" aria-label="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:24px">Enter your date of birth to confirm your
+                    identity.</p>
+                <form id="reset-step2-form" autocomplete="off" novalidate>
+                    <div class="form-group">
+                        <input type="text" id="reset-dob" class="input-field" placeholder=" " />
+                        <label for="reset-dob" class="floating-label">Date of Birth (DD/MM/YYYY)</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="reset-step2-btn">
+                        <span id="reset-step2-text">Verify</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Step 3: New Password -->
+            <div id="reset-step-3" style="display:none">
+                <div class="modal-header">
+                    <h2>New Password</h2>
+                    <button class="modal-close" onclick="closeResetModal()" aria-label="Close">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="reset-step3-form" autocomplete="off" novalidate>
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="reset-newPassword" class="input-field" placeholder=" " />
+                            <button type="button" class="password-toggle" id="toggle-reset-pw"
+                                aria-label="Toggle"></button>
+                        </div>
+                        <label for="reset-newPassword" class="floating-label">New Password</label>
+
+                        <!-- Password Strength Inspector -->
+                        <div class="pwd-strength-container" style="margin-top:12px;display:none"
+                            id="reset-pwd-strength">
+                            <div class="pwd-bar-wrapper" id="reset-pwd-bars"
+                                style="display:flex;gap:4px;margin-bottom:12px;">
+                                <div class="pwd-bar"
+                                    style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                                <div class="pwd-bar"
+                                    style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                                <div class="pwd-bar"
+                                    style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                                <div class="pwd-bar"
+                                    style="height:4px;flex:1;border-radius:2px;background:var(--border)"></div>
+                            </div>
+                            <div style="font-size:12px;font-weight:600;text-align:right;margin-bottom:12px;color:var(--muted)"
+                                id="reset-pwd-label">Enter a password</div>
+                            <ul
+                                style="list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                                <li class="pwd-req" id="r-req-length"
+                                    style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9 12l2 2 4-4" />
+                                    </svg> 8+ characters
+                                </li>
+                                <li class="pwd-req" id="r-req-upper"
+                                    style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9 12l2 2 4-4" />
+                                    </svg> 1 uppercase
+                                </li>
+                                <li class="pwd-req" id="r-req-lower"
+                                    style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9 12l2 2 4-4" />
+                                    </svg> 1 lowercase
+                                </li>
+                                <li class="pwd-req" id="r-req-number"
+                                    style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9 12l2 2 4-4" />
+                                    </svg> 1 number
+                                </li>
+                                <li class="pwd-req" id="r-req-special"
+                                    style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2" stroke-linecap="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <path d="M9 12l2 2 4-4" />
+                                    </svg> 1 special char
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="password-wrapper">
+                            <input type="password" id="reset-confirmPassword" class="input-field" placeholder=" " />
+                            <button type="button" class="password-toggle" id="toggle-reset-cpw"
+                                aria-label="Toggle"></button>
+                        </div>
+                        <label for="reset-confirmPassword" class="floating-label">Confirm Password</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="reset-step3-btn">
+                        <span id="reset-step3-text">Reset Password</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Success -->
+            <div id="reset-success" style="display:none">
+                <div class="success-state">
+                    <div class="checkmark-circle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <h2>Password Reset!</h2>
+                    <p style="color:var(--muted);margin-top:8px">Your password has been updated. You can now sign in.
+                    </p>
+                    <button class="btn btn-primary" style="margin-top:24px" onclick="closeResetModal()">Back to
+                        Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Styles & UI -->
+    <script type="module">
+        import { seedDemoData } from './js/storage.js';
+        import { authenticateAdmin, verifyStudentForReset, verifyDobForReset, resetPassword } from './js/auth.js';
+        import { authenticateStudent } from './js/auth-utils.js';
+        import { validatePasswordStrength } from './js/password-utils.js';
+        import { requireGuest } from './js/session.js';
+        import { showToast } from './js/toast.js';
+        import { setupPasswordToggle, showValidation, clearValidation, initRipples, initThemeToggle } from './js/ui.js';
+
+        // Init
+        seedDemoData();
+        if (!requireGuest()) throw new Error('Redirecting...');
+        initThemeToggle();
+        initRipples();
+
+        // Password toggles
+        setupPasswordToggle(document.getElementById('password'), document.getElementById('toggle-password'));
+        setupPasswordToggle(document.getElementById('reset-newPassword'), document.getElementById('toggle-reset-pw'));
+        setupPasswordToggle(document.getElementById('reset-confirmPassword'), document.getElementById('toggle-reset-cpw'));
+
+        // ═══ ROLE TOGGLE ═══
+        let activeRole = 'student'; // 'student' | 'admin'
+        const slider = document.getElementById('role-slider');
+        const tabStudent = document.getElementById('tab-student');
+        const tabAdmin = document.getElementById('tab-admin');
+
+        function switchRole(role) {
+            activeRole = role;
+
+            // Tab UI
+            tabStudent.classList.toggle('active', role === 'student');
+            tabAdmin.classList.toggle('active', role === 'admin');
+            slider.classList.toggle('admin', role === 'admin');
+
+            // Field switching
+            document.getElementById('field-studentId').style.display = role === 'student' ? '' : 'none';
+            document.getElementById('field-adminEmail').style.display = role === 'admin' ? '' : 'none';
+
+            // Header text
+            document.getElementById('login-eyebrow').textContent = role === 'student' ? 'Student Access' : 'School Admin Access';
+            document.getElementById('login-heading').textContent = role === 'student' ? 'Welcome back' : 'Admin Sign In';
+            document.getElementById('login-subtitle').textContent = role === 'student'
+                ? 'Sign in to continue your cognitive journey.'
+                : 'Access your school\'s administration panel.';
+
+            // Hero label
+            document.getElementById('hero-label').textContent = role === 'student' ? 'Student Portal' : 'Admin Portal';
+
+            // Forgot password (students only)
+            document.getElementById('forgot-password-row').style.display = role === 'student' ? '' : 'none';
+
+            // Footer
+            document.getElementById('login-footer-divider').textContent = role === 'student' ? 'Are you an admin?' : 'New to AI Native Schools?';
+
+            // Clear all validation
+            document.querySelectorAll('#login-form .input-field').forEach(i => { i.value = ''; clearValidation(i); });
+
+            // Reset button
+            const btn = document.getElementById('login-btn');
+            const btnText = document.getElementById('login-btn-text');
+            btn.disabled = false;
+            btnText.textContent = 'Sign In';
+        }
+
+        tabStudent.addEventListener('click', () => switchRole('student'));
+        tabAdmin.addEventListener('click', () => switchRole('admin'));
+
+        // ═══ LOGIN FORM ═══
+        const loginForm = document.getElementById('login-form');
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (activeRole === 'student') {
+                await handleStudentLogin();
+            } else {
+                await handleAdminLogin();
+            }
+        });
+
+        // ── Student Login ──
+        async function handleStudentLogin() {
+            const schoolCode = document.getElementById('schoolCode').value.trim().toUpperCase();
+            const studentId = document.getElementById('studentId').value.trim();
+            const password = document.getElementById('password').value;
+
+            let hasError = false;
+            if (!schoolCode) { showValidation(document.getElementById('schoolCode'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('schoolCode')); }
+            if (!studentId) { showValidation(document.getElementById('studentId'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('studentId')); }
+            if (!password) { showValidation(document.getElementById('password'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('password')); }
+            if (hasError) return;
+
+            const btn = document.getElementById('login-btn');
+            const btnText = document.getElementById('login-btn-text');
+            btn.disabled = true;
+            btnText.innerHTML = '<div class="spinner"></div>';
+
+            await new Promise(r => setTimeout(r, 800));
+            const result = await authenticateStudent(schoolCode, studentId, password);
+
+            if (result.success) {
+                showToast('success', result.message);
+                await new Promise(r => setTimeout(r, 600));
+
+                // Redirect based on first-time login
+                if (result.student.isFirstLogin) {
+                    window.location.href = 'student/setup-password.html';
+                } else {
+                    window.location.href = 'student/dashboard.html';
+                }
+            } else {
+                showToast('error', result.message);
+                btn.disabled = false;
+                btnText.textContent = 'Sign In';
+            }
+        }
+
+        // ── Admin Login ──
+        async function handleAdminLogin() {
+            const schoolCode = document.getElementById('schoolCode').value.trim().toUpperCase();
+            const adminEmail = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('password').value;
+
+            let hasError = false;
+            if (!schoolCode) { showValidation(document.getElementById('schoolCode'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('schoolCode')); }
+            if (!adminEmail) { showValidation(document.getElementById('adminEmail'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('adminEmail')); }
+            if (!password) { showValidation(document.getElementById('password'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('password')); }
+            if (hasError) return;
+
+            const btn = document.getElementById('login-btn');
+            const btnText = document.getElementById('login-btn-text');
+            btn.disabled = true;
+            btnText.innerHTML = '<div class="spinner"></div>';
+
+            await new Promise(r => setTimeout(r, 800));
+            const result = await authenticateAdmin(schoolCode, adminEmail, password);
+
+            if (result.success) {
+                showToast('success', result.message);
+                await new Promise(r => setTimeout(r, 600));
+                window.location.href = 'admin/dashboard.html';
+            } else {
+                showToast('error', result.message);
+                btn.disabled = false;
+                btnText.textContent = 'Sign In';
+            }
+        }
+
+        // --- RESET MODAL ---
+        const resetModal = document.getElementById('reset-modal');
+        let resetSchoolCode = '', resetStudentId = '';
+
+        document.getElementById('forgot-password-btn').addEventListener('click', () => {
+            resetModal.classList.add('active');
+            showStep(1);
+        });
+
+        document.getElementById('close-reset-modal').addEventListener('click', () => closeResetModal());
+        resetModal.addEventListener('click', (e) => { if (e.target === resetModal) closeResetModal(); });
+
+        window.closeResetModal = function () {
+            resetModal.classList.remove('active');
+            showStep(1);
+            document.querySelectorAll('#reset-modal input').forEach(i => { i.value = ''; clearValidation(i); });
+        };
+
+        function showStep(n) {
+            [1, 2, 3].forEach(i => document.getElementById('reset-step-' + i).style.display = 'none');
+            document.getElementById('reset-success').style.display = 'none';
+            if (n === 'success') {
+                document.getElementById('reset-success').style.display = 'block';
+            } else {
+                document.getElementById('reset-step-' + n).style.display = 'block';
+            }
+        }
+
+        // Step 1
+        document.getElementById('reset-step1-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            resetSchoolCode = document.getElementById('reset-schoolCode').value.trim().toUpperCase();
+            resetStudentId = document.getElementById('reset-studentId').value.trim();
+
+            if (!resetSchoolCode) { showValidation(document.getElementById('reset-schoolCode'), false, 'Required'); return; }
+            if (!resetStudentId) { showValidation(document.getElementById('reset-studentId'), false, 'Required'); return; }
+
+            const result = verifyStudentForReset(resetSchoolCode, resetStudentId);
+            if (!result.success) {
+                showToast('error', result.message);
+                return;
+            }
+
+            if (result.hasDob) {
+                showStep(2);
+            } else {
+                // No DOB, skip to password
+                showStep(3);
+            }
+        });
+
+        // Step 2
+        document.getElementById('reset-step2-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const dob = document.getElementById('reset-dob').value.trim();
+            if (!dob) { showValidation(document.getElementById('reset-dob'), false, 'Required'); return; }
+
+            const result = verifyDobForReset(resetSchoolCode, resetStudentId, dob);
+            if (!result.success) {
+                showToast('error', result.message);
+                return;
+            }
+            showStep(3);
+        });
+
+        // Step 3
+        let isResetPwdValid = false;
+        const resetNewPwInput = document.getElementById('reset-newPassword');
+        const resetConfirmPwInput = document.getElementById('reset-confirmPassword');
+        const resetStep3Btn = document.getElementById('reset-step3-btn');
+        const rPwdBars = document.getElementById('reset-pwd-bars').children;
+        const rPwdLabel = document.getElementById('reset-pwd-label');
+
+        resetNewPwInput.addEventListener('input', (e) => {
+            document.getElementById('reset-pwd-strength').style.display = 'block';
+            const pwd = e.target.value;
+            const evalResult = validatePasswordStrength(pwd);
+
+            for (let i = 0; i < 4; i++) {
+                rPwdBars[i].style.background = i < evalResult.score ? evalResult.color : 'var(--border)';
+            }
+
+            if (pwd.length === 0) {
+                document.getElementById('reset-pwd-strength').style.display = 'none';
+            } else {
+                rPwdLabel.textContent = evalResult.label;
+                rPwdLabel.style.color = evalResult.color;
+            }
+
+            const reqs = evalResult.requirements;
+            document.getElementById('r-req-length').style.color = reqs.length ? 'var(--text)' : 'var(--muted)';
+            document.getElementById('r-req-length').querySelector('svg').style.stroke = reqs.length ? 'var(--C)' : 'currentColor';
+
+            document.getElementById('r-req-upper').style.color = reqs.upper ? 'var(--text)' : 'var(--muted)';
+            document.getElementById('r-req-upper').querySelector('svg').style.stroke = reqs.upper ? 'var(--C)' : 'currentColor';
+
+            document.getElementById('r-req-lower').style.color = reqs.lower ? 'var(--text)' : 'var(--muted)';
+            document.getElementById('r-req-lower').querySelector('svg').style.stroke = reqs.lower ? 'var(--C)' : 'currentColor';
+
+            document.getElementById('r-req-number').style.color = reqs.number ? 'var(--text)' : 'var(--muted)';
+            document.getElementById('r-req-number').querySelector('svg').style.stroke = reqs.number ? 'var(--C)' : 'currentColor';
+
+            document.getElementById('r-req-special').style.color = reqs.special ? 'var(--text)' : 'var(--muted)';
+            document.getElementById('r-req-special').querySelector('svg').style.stroke = reqs.special ? 'var(--C)' : 'currentColor';
+
+            isResetPwdValid = evalResult.isValid;
+            checkResetForm();
+        });
+
+        resetConfirmPwInput.addEventListener('input', checkResetForm);
+
+        function checkResetForm() {
+            const match = resetNewPwInput.value === resetConfirmPwInput.value;
+            if (isResetPwdValid && match && resetNewPwInput.value.length > 0) {
+                resetStep3Btn.disabled = false;
+            } else {
+                resetStep3Btn.disabled = true;
+            }
+        }
+
+        document.getElementById('reset-step3-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newPw = resetNewPwInput.value;
+            const confirmPw = resetConfirmPwInput.value;
+
+            if (!isResetPwdValid) { showToast('error', 'Please meet all password requirements'); return; }
+            if (newPw !== confirmPw) { showToast('error', 'Passwords do not match'); return; }
+
+            const btnText = document.getElementById('reset-step3-text');
+            btnText.innerHTML = '<div class="spinner" style="border-width:2px;width:16px;height:16px;border-top-color:white;display:inline-block"></div>';
+            resetStep3Btn.disabled = true;
+
+            const result = await resetPassword(resetSchoolCode, resetStudentId, newPw);
+            resetStep3Btn.disabled = false;
+
+            if (result.success) {
+                showStep('success');
+            } else {
+                btnText.textContent = 'Reset Password';
+                showToast('error', result.message);
+            }
+        });
+
+        // Live validation
+        document.querySelectorAll('#login-form .input-field').forEach(input => {
+            input.addEventListener('input', () => clearValidation(input));
+        });
+    </script>
+</body>
+
+</html>

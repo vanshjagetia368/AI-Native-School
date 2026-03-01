@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Classes — AI Native Schools</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <a href="cohort-intelligence.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                    <span>Cohort Analytics</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Classes</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px">Manage your school's class structure</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <button class="btn btn-primary btn-sm" id="add-class-btn">+ Add Class</button>
+                </div>
+            </div>
+
+            <div class="class-grid" id="class-grid">
+                <div style="text-align:center;color:var(--muted);padding:40px">Loading...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Class Modal -->
+    <div class="modal-overlay" id="add-class-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Class</h2>
+                <button class="modal-close" id="close-class-modal" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <form id="add-class-form">
+                <div class="form-group">
+                    <input type="text" id="new-class-name" class="input-field" placeholder=" " autofocus />
+                    <label for="new-class-name" class="floating-label">Class Name (e.g. 8A, 9B)</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Class</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirm Modal -->
+    <div class="modal-overlay" id="delete-confirm-modal">
+        <div class="modal-content" style="text-align:center">
+            <h2 style="margin-bottom:12px">Delete Class?</h2>
+            <p style="color:var(--muted);font-size:14px;margin-bottom:24px">This will remove the class and all students
+                in it. This cannot be undone.</p>
+            <p style="font-weight:600;margin-bottom:24px" id="delete-class-name"></p>
+            <div style="display:flex;gap:12px">
+                <button class="btn btn-secondary" id="cancel-delete" style="flex:1">Cancel</button>
+                <button class="btn btn-danger" id="confirm-delete" style="flex:1">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getSchool, getClasses, addClass, deleteClass } from '../js/storage.js';
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+        import { showToast } from '../js/toast.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+
+        if (!hasPermission(session.role, 'edit_students')) {
+            window.location.replace('dashboard.html');
+        }
+
+        initThemeToggle();
+
+        // RBAC UI Filtering
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        const grid = document.getElementById('class-grid');
+        let pendingDelete = null;
+
+        function render() {
+            const classes = getClasses(session.schoolCode);
+            if (classes.length === 0) {
+                grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1">
+            <div class="empty-state-icon">📂</div>
+            <div class="empty-state-title">No classes yet</div>
+            <p style="color:var(--muted)">Create your first class or import students from Excel.</p>
+          </div>`;
+                return;
+            }
+
+            grid.innerHTML = classes.map(c => `
+        <div class="class-card" style="animation:fadeUp 0.4s ease both">
+          <div class="class-card-name">${c.className}</div>
+          <div class="class-card-count">${(c.students || []).length} student${(c.students || []).length !== 1 ? 's' : ''}</div>
+          <div class="class-card-count" style="margin-top:4px;font-size:12px">
+            ${(c.students || []).filter(s => s.psychometricCompleted).length} assessments completed
+          </div>
+          <div class="class-card-actions">
+            <a href="students.html?class=${encodeURIComponent(c.className)}" class="btn btn-ghost btn-sm" style="flex:1">View Students</a>
+            <button class="btn btn-danger btn-sm delete-class-btn" data-class="${c.className}">Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+            // Delete handlers
+            grid.querySelectorAll('.delete-class-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    pendingDelete = btn.dataset.class;
+                    document.getElementById('delete-class-name').textContent = `"${pendingDelete}"`;
+                    document.getElementById('delete-confirm-modal').classList.add('active');
+                });
+            });
+        }
+
+        render();
+
+        // Add class modal
+        const addModal = document.getElementById('add-class-modal');
+        document.getElementById('add-class-btn').addEventListener('click', () => addModal.classList.add('active'));
+        document.getElementById('close-class-modal').addEventListener('click', () => addModal.classList.remove('active'));
+        addModal.addEventListener('click', (e) => { if (e.target === addModal) addModal.classList.remove('active'); });
+
+        document.getElementById('add-class-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('new-class-name').value.trim();
+            if (!name) return;
+
+            const result = addClass(session.schoolCode, name);
+            if (result.success) {
+                showToast('success', result.message);
+                addModal.classList.remove('active');
+                document.getElementById('new-class-name').value = '';
+                render();
+            } else {
+                showToast('error', result.message);
+            }
+        });
+
+        // Delete confirm
+        const delModal = document.getElementById('delete-confirm-modal');
+        document.getElementById('cancel-delete').addEventListener('click', () => delModal.classList.remove('active'));
+        delModal.addEventListener('click', (e) => { if (e.target === delModal) delModal.classList.remove('active'); });
+
+        document.getElementById('confirm-delete').addEventListener('click', () => {
+            if (!pendingDelete) return;
+            const result = deleteClass(session.schoolCode, pendingDelete);
+            if (result.success) {
+                showToast('success', result.message);
+                delModal.classList.remove('active');
+                render();
+            } else {
+                showToast('error', result.message);
+            }
+        });
+
+        // Sidebar
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            document.getElementById('sidebar-toggle').textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+    </script>
+</body>
+
+</html>

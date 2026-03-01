@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Students — AI Native Schools</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <a href="cohort-intelligence.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                    <span>Cohort Analytics</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Students</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px" id="subtitle">All enrolled students</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <select id="class-filter"
+                        style="font-family:'Outfit',sans-serif;font-size:13px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--soft);color:var(--text);cursor:pointer">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="data-table-wrap" style="animation:fadeUp 0.5s ease both">
+                <div class="data-table-header">
+                    <h3 id="table-title">All Students</h3>
+                    <span style="font-size:13px;color:var(--muted)" id="count-label"></span>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Student ID</th>
+                            <th>Class</th>
+                            <th>Gender</th>
+                            <th>Assessment</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="student-table">
+                        <tr>
+                            <td colspan="6" style="text-align:center;color:var(--muted);padding:32px">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Profile Modal -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal-content" style="max-width:540px">
+            <div class="modal-header">
+                <h2 id="profile-name">Student Profile</h2>
+                <button class="modal-close" id="close-profile" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div id="profile-body"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getClasses, getAllStudents } from '../js/storage.js';
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+        initThemeToggle();
+
+        // RBAC UI Filtering
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        let classes = getClasses(session.schoolCode);
+        let allStudents = getAllStudents(session.schoolCode);
+
+        // Filter by role scope
+        if (session.role === 'teacher' && session.teacherClass) {
+            classes = classes.filter(c => c.className === session.teacherClass);
+            allStudents = allStudents.filter(s => s.className === session.teacherClass);
+        }
+
+        // URL filter
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterClass = urlParams.get('class') || '';
+
+        // Populate class filter
+        const filterEl = document.getElementById('class-filter');
+        classes.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.className;
+            opt.textContent = c.className;
+            if (c.className === filterClass) opt.selected = true;
+            filterEl.appendChild(opt);
+        });
+
+        function render(classFilter) {
+            const tbody = document.getElementById('student-table');
+            const students = classFilter ? allStudents.filter(s => s.className === classFilter) : allStudents;
+
+            document.getElementById('table-title').textContent = classFilter ? `Class ${classFilter}` : 'All Students';
+            document.getElementById('count-label').textContent = `${students.length} student${students.length !== 1 ? 's' : ''}`;
+
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:32px">No students found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = students.map(s => `
+        <tr>
+          <td style="font-weight:500;color:var(--text)">${s.name}</td>
+          <td>${s.studentId}</td>
+          <td>${s.className}</td>
+          <td>${s.gender || '—'}</td>
+          <td><span class="badge ${s.psychometricCompleted ? 'badge-success' : 'badge-pending'}">${s.psychometricCompleted ? 'Completed' : 'Pending'}</span></td>
+          <td><button class="btn btn-ghost btn-sm view-profile" data-id="${s.studentId}">View</button></td>
+        </tr>
+      `).join('');
+
+            // Profile click
+            tbody.querySelectorAll('.view-profile').forEach(btn => {
+                btn.addEventListener('click', () => openProfile(btn.dataset.id));
+            });
+        }
+
+        render(filterClass);
+        if (filterClass) {
+            document.getElementById('subtitle').textContent = `Viewing class ${filterClass}`;
+        }
+
+        filterEl.addEventListener('change', () => {
+            render(filterEl.value);
+        });
+
+        // Profile modal
+        function openProfile(studentId) {
+            const student = allStudents.find(s => s.studentId === studentId);
+            if (!student) return;
+
+            document.getElementById('profile-name').textContent = student.name;
+
+            let body = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+          <div><span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Student ID</span><div style="font-size:15px;margin-top:4px">${student.studentId}</div></div>
+          <div><span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Class</span><div style="font-size:15px;margin-top:4px">${student.className}</div></div>
+          <div><span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">Gender</span><div style="font-size:15px;margin-top:4px">${student.gender || '—'}</div></div>
+          <div><span style="font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted)">DOB</span><div style="font-size:15px;margin-top:4px">${student.dob || '—'}</div></div>
+        </div>
+      `;
+
+            if (student.psychometricCompleted && student.psychometricReport) {
+                const report = student.psychometricReport;
+                body += `
+          <div style="padding-top:16px;border-top:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">Psychometric Report</div>
+            ${report.dominantTrait ? `<div class="report-card" style="margin-bottom:12px"><div class="report-card-header"><div class="report-card-icon" style="background:var(--accent-light);color:var(--accent)">🧠</div><div><div class="report-card-label">Dominant Trait</div><div class="report-card-title">${report.dominantTrait}</div></div></div></div>` : ''}
+            ${report.narrative ? `<div class="report-card"><div class="report-card-body">${report.narrative}</div></div>` : ''}
+            ${report.dateTaken ? `<p style="font-size:12px;color:var(--muted);margin-top:12px">Completed: ${report.dateTaken}</p>` : ''}
+          </div>
+        `;
+            } else {
+                body += `<div style="padding-top:16px;border-top:1px solid var(--border);text-align:center;color:var(--muted);padding:24px"><span class="badge badge-pending">Assessment Pending</span></div>`;
+            }
+
+            document.getElementById('profile-body').innerHTML = body;
+            document.getElementById('profile-modal').classList.add('active');
+        }
+
+        const profileModal = document.getElementById('profile-modal');
+        document.getElementById('close-profile').addEventListener('click', () => profileModal.classList.remove('active'));
+        profileModal.addEventListener('click', (e) => { if (e.target === profileModal) profileModal.classList.remove('active'); });
+
+        // Sidebar
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            document.getElementById('sidebar-toggle').textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports — AI Native Schools</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Psychometric Reports</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px">View student cognitive assessment
+                        results</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <select id="class-filter"
+                        style="font-family:'Outfit',sans-serif;font-size:13px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--soft);color:var(--text);cursor:pointer">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Summary Stats -->
+            <div class="stats-grid" style="margin-bottom:32px">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(46,125,107,0.1);color:var(--success)">✓</div>
+                    <div class="stat-label">Reports Available</div>
+                    <div class="stat-value" id="stat-completed">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(193,123,46,0.1);color:var(--warning)">⏳</div>
+                    <div class="stat-label">Awaiting Assessment</div>
+                    <div class="stat-value" id="stat-pending">0</div>
+                </div>
+            </div>
+
+            <!-- Reports List -->
+            <div id="reports-container"></div>
+
+            <!-- Empty state -->
+            <div id="empty-state" style="display:none" class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <div class="empty-state-title">No reports yet</div>
+                <p>Students must complete the psychometric assessment for reports to appear here.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div class="modal-overlay" id="report-modal">
+        <div class="modal-content" style="max-width:580px;max-height:85vh;overflow-y:auto">
+            <div class="modal-header">
+                <h2 id="report-student-name">Report</h2>
+                <button class="modal-close" id="close-report" aria-label="Close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div id="report-detail"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { getClasses, getAllStudents } from '../js/storage.js';
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+        initThemeToggle();
+
+        // RBAC UI Filtering
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        let classes = getClasses(session.schoolCode);
+        let allStudents = getAllStudents(session.schoolCode);
+
+        // Filter by role scope
+        if (session.role === 'teacher' && session.teacherClass) {
+            classes = classes.filter(c => c.className === session.teacherClass);
+            allStudents = allStudents.filter(s => s.className === session.teacherClass);
+        }
+
+        // Filter
+        const filterEl = document.getElementById('class-filter');
+        classes.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.className;
+            opt.textContent = c.className;
+            filterEl.appendChild(opt);
+        });
+
+        function render(classFilter) {
+            const students = classFilter ? allStudents.filter(s => s.className === classFilter) : allStudents;
+            const completed = students.filter(s => s.psychometricCompleted && s.psychometricReport);
+            const pending = students.length - completed.length;
+
+            document.getElementById('stat-completed').textContent = completed.length;
+            document.getElementById('stat-pending').textContent = pending;
+
+            const container = document.getElementById('reports-container');
+            const emptyState = document.getElementById('empty-state');
+
+            if (completed.length === 0) {
+                container.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+
+            container.innerHTML = `
+        <div class="data-table-wrap" style="animation:fadeUp 0.5s ease both">
+          <div class="data-table-header">
+            <h3>Completed Assessments</h3>
+            <span style="font-size:13px;color:var(--muted)">${completed.length} report${completed.length !== 1 ? 's' : ''}</span>
+          </div>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Class</th>
+                <th>Dominant Trait</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${completed.map(s => {
+                const r = s.psychometricReport;
+                return `
+                  <tr>
+                    <td style="font-weight:500;color:var(--text)">${s.name}</td>
+                    <td>${s.className}</td>
+                    <td><span class="badge badge-success" style="background:var(--accent-light);color:var(--accent)">${r.dominantTrait || 'N/A'}</span></td>
+                    <td style="font-size:13px;color:var(--muted)">${r.dateTaken || '—'}</td>
+                    <td><button class="btn btn-ghost btn-sm view-report" data-id="${s.studentId}">View Report</button> <a href="reports/cognitive-dossier.html?studentId=${s.studentId}" class="btn btn-ghost btn-sm" style="margin-left:4px;color:var(--accent);border:1px solid var(--accent);text-decoration:none">🔬 Forensic Dossier</a></td>
+                  </tr>`;
+            }).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+
+            container.querySelectorAll('.view-report').forEach(btn => {
+                btn.addEventListener('click', () => openReport(btn.dataset.id));
+            });
+        }
+
+        render('');
+
+        filterEl.addEventListener('change', () => render(filterEl.value));
+
+        // Report modal
+        function openReport(studentId) {
+            const student = allStudents.find(s => s.studentId === studentId);
+            if (!student || !student.psychometricReport) return;
+
+            const r = student.psychometricReport;
+            document.getElementById('report-student-name').textContent = student.name;
+
+            let html = `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px">
+          <div style="font-size:12px"><span style="color:var(--muted)">Class:</span> ${student.className}</div>
+          <div style="font-size:12px"><span style="color:var(--muted)">ID:</span> ${student.studentId}</div>
+          <div style="font-size:12px"><span style="color:var(--muted)">Date:</span> ${r.dateTaken || '—'}</div>
+          <div style="font-size:12px"><span style="color:var(--muted)">Time:</span> ${r.completionTime ? Math.round(r.completionTime / 60) + ' min' : '—'}</div>
+        </div>
+      `;
+
+            // Dominant trait
+            if (r.dominantTrait) {
+                html += `
+          <div class="report-card">
+            <div class="report-card-header">
+              <div class="report-card-icon" style="background:var(--accent-light);color:var(--accent)">🧠</div>
+              <div>
+                <div class="report-card-label">Personality Archetype</div>
+                <div class="report-card-title">${r.dominantTrait}</div>
+              </div>
+            </div>
+          </div>`;
+            }
+
+            // OCEAN scores
+            if (r.scores) {
+                const traits = { O: 'Openness', C: 'Conscientiousness', E: 'Extraversion', A: 'Agreeableness', N: 'Neuroticism' };
+                html += '<div style="margin-top:16px">';
+                html += '<div style="font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:12px">OCEAN Profile</div>';
+                for (const [key, label] of Object.entries(traits)) {
+                    const score = r.scores[key] || 0;
+                    const pct = Math.min(100, Math.max(0, score));
+                    html += `
+            <div style="margin-bottom:12px">
+              <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+                <span>${label}</span>
+                <span style="color:var(--muted)">${Math.round(pct)}%</span>
+              </div>
+              <div style="height:6px;border-radius:3px;background:var(--soft);overflow:hidden">
+                <div style="height:100%;width:${pct}%;border-radius:3px;background:var(--accent);transition:width 0.6s ease"></div>
+              </div>
+            </div>`;
+                }
+                html += '</div>';
+            }
+
+            // Narrative
+            if (r.narrative) {
+                html += `
+          <div class="report-card" style="margin-top:16px">
+            <div class="report-card-label">Narrative Summary</div>
+            <div class="report-card-body" style="margin-top:8px">${r.narrative}</div>
+          </div>`;
+            }
+
+            // Diagnostic flags
+            if (r.diagnosticFlags && r.diagnosticFlags.length > 0) {
+                html += '<div style="margin-top:16px"><div class="report-card-label" style="margin-bottom:8px">Diagnostic Flags</div>';
+                html += r.diagnosticFlags.map(f => `<span class="badge badge-danger" style="margin-right:6px;margin-bottom:6px">${f}</span>`).join('');
+                html += '</div>';
+            }
+
+            document.getElementById('report-detail').innerHTML = html;
+            document.getElementById('report-modal').classList.add('active');
+        }
+
+        const reportModal = document.getElementById('report-modal');
+        document.getElementById('close-report').addEventListener('click', () => reportModal.classList.remove('active'));
+        reportModal.addEventListener('click', (e) => { if (e.target === reportModal) reportModal.classList.remove('active'); });
+
+        // Sidebar
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            document.getElementById('sidebar-toggle').textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+    </script>
+</body>
+
+</html>

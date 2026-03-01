@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — AI Native Schools</title>
+    <link rel="stylesheet" href="../styles.css" />
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <a href="cohort-intelligence.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                    <span>Cohort Analytics</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Dashboard</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px" id="welcome-msg">Welcome back</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <div class="profile-avatar" id="profile-avatar"></div>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(61,90,58,0.1);color:var(--accent)">📚</div>
+                    <div class="stat-label">Total Classes</div>
+                    <div class="stat-value" id="stat-classes">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(46,125,107,0.1);color:var(--success)">👥</div>
+                    <div class="stat-label">Total Students</div>
+                    <div class="stat-value" id="stat-students">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(193,123,46,0.1);color:var(--warning)">🧠</div>
+                    <div class="stat-label">Tests Completed</div>
+                    <div class="stat-value" id="stat-completed">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(193,64,64,0.1);color:var(--danger)">⏳</div>
+                    <div class="stat-label">Pending</div>
+                    <div class="stat-value" id="stat-pending">0</div>
+                </div>
+            </div>
+
+            <!-- Recent Students -->
+            <div class="data-table-wrap"
+                style="animation:fadeUp 0.5s cubic-bezier(.22,.68,0,1.2) both;animation-delay:0.2s">
+                <div class="data-table-header">
+                    <h3>Recent Students</h3>
+                    <a href="students.html" class="link-btn">View All →</a>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>ID</th>
+                            <th>Class</th>
+                            <th>Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recent-table">
+                        <tr>
+                            <td colspan="4" style="text-align:center;color:var(--muted);padding:32px">Loading...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import { getSchool, getAllStudents, getSession } from '../js/storage.js';
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+        initThemeToggle();
+
+        // RBAC UI Filtering
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        // Welcome
+        document.getElementById('welcome-msg').textContent = `Welcome back, ${session.adminName || 'Admin'}`;
+        document.getElementById('profile-avatar').textContent = (session.adminName || 'A')[0].toUpperCase();
+
+        // Stats
+        const school = getSchool(session.schoolCode);
+        let classes = school?.classes || [];
+        let allStudents = getAllStudents(session.schoolCode);
+
+        // Filter by role scope
+        if (session.role === 'teacher' && session.teacherClass) {
+            classes = classes.filter(c => c.className === session.teacherClass);
+            allStudents = allStudents.filter(s => s.className === session.teacherClass);
+        }
+
+        const completed = allStudents.filter(s => s.psychometricCompleted);
+
+        document.getElementById('stat-classes').textContent = classes.length;
+        document.getElementById('stat-students').textContent = allStudents.length;
+        document.getElementById('stat-completed').textContent = completed.length;
+        document.getElementById('stat-pending').textContent = allStudents.length - completed.length;
+
+        // Recent students table
+        const tbody = document.getElementById('recent-table');
+        const recent = allStudents.slice(0, 8);
+        if (recent.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4" class="empty-state" style="padding:32px"><div class="empty-state-icon">📭</div><div class="empty-state-title">No students yet</div><p>Import students via Excel or add them manually.</p></td></tr>';
+        } else {
+            tbody.innerHTML = recent.map(s => `
+        <tr>
+          <td style="font-weight:500;color:var(--text)">${s.name}</td>
+          <td>${s.studentId}</td>
+          <td>${s.className}</td>
+          <td><span class="badge ${s.psychometricCompleted ? 'badge-success' : 'badge-pending'}">${s.psychometricCompleted ? 'Completed' : 'Pending'}</span></td>
+        </tr>
+      `).join('');
+        }
+
+        // Sidebar toggle
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            const btn = document.getElementById('sidebar-toggle');
+            btn.textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+    </script>
+</body>
+
+</html>

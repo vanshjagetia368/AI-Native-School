@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Import Students — AI Native Schools</title>
+    <link rel="stylesheet" href="../styles.css" />
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <style>
+        /* ═══════════════════════════════════════════
+       IMPORT ENGINE — Scoped Styles
+       ═══════════════════════════════════════════ */
+
+        /* Multi-step progress */
+        .import-steps {
+            display: flex;
+            gap: 0;
+            margin-bottom: 32px;
+            position: relative
+        }
+
+        .import-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1
+        }
+
+        .import-step-dot {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            border: 2px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            transition: all 0.4s cubic-bezier(.22, .68, 0, 1.2)
+        }
+
+        .import-step.active .import-step-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white
+        }
+
+        .import-step.done .import-step-dot {
+            border-color: var(--success);
+            background: var(--success);
+            color: white
+        }
+
+        .import-step-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--muted);
+            transition: color 0.3s
+        }
+
+        .import-step.active .import-step-label,
+        .import-step.done .import-step-label {
+            color: var(--text)
+        }
+
+        .import-steps::before {
+            content: '';
+            position: absolute;
+            top: 17px;
+            left: 15%;
+            right: 15%;
+            height: 2px;
+            background: var(--border);
+            z-index: 0
+        }
+
+        .import-steps::after {
+            content: '';
+            position: absolute;
+            top: 17px;
+            left: 15%;
+            height: 2px;
+            background: var(--accent);
+            z-index: 0;
+            transition: width 0.6s cubic-bezier(.22, .68, 0, 1.2);
+            width: var(--step-progress, 0%)
+        }
+
+        /* Processing animation */
+        .process-wrap {
+            text-align: center;
+            padding: 48px 24px
+        }
+
+        .process-ring {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 24px
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        .process-status {
+            font-size: 15px;
+            color: var(--text);
+            margin-bottom: 8px;
+            font-weight: 500
+        }
+
+        .process-sub {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .process-dots::after {
+            content: '';
+            animation: dots 1.5s infinite
+        }
+
+        @keyframes dots {
+            0% {
+                content: ''
+            }
+
+            33% {
+                content: '.'
+            }
+
+            66% {
+                content: '..'
+            }
+
+            100% {
+                content: '...'
+            }
+        }
+
+        /* Analytics panel split */
+        .import-split {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 24px;
+            animation: fadeUp 0.5s ease both
+        }
+
+        @media(max-width:900px) {
+            .import-split {
+                grid-template-columns: 1fr
+            }
+        }
+
+        /* Analytics sidebar */
+        .analytics-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            height: fit-content;
+            position: sticky;
+            top: 24px
+        }
+
+        .analytics-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .analytics-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .analytics-row:last-child {
+            border-bottom: 0
+        }
+
+        .analytics-label {
+            font-size: 13px;
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .analytics-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text)
+        }
+
+        .analytics-value.success {
+            color: var(--success)
+        }
+
+        .analytics-value.warning {
+            color: var(--warning)
+        }
+
+        .analytics-value.danger {
+            color: var(--danger)
+        }
+
+        /* Confidence meter */
+        .confidence-meter {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border)
+        }
+
+        .confidence-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 10px
+        }
+
+        .confidence-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: var(--soft);
+            overflow: hidden
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s cubic-bezier(.22, .68, 0, 1.2);
+            background: linear-gradient(90deg, var(--danger) 0%, var(--warning) 50%, var(--success) 100%)
+        }
+
+        .confidence-score {
+            text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 8px;
+            color: var(--text)
+        }
+
+        /* Column mapping */
+        .mapping-grid {
+            display: grid;
+            grid-template-columns: 1fr 40px 1fr;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+            animation: fadeUp 0.3s ease both
+        }
+
+        .mapping-source {
+            background: var(--soft);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .mapping-source .col-idx {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            flex-shrink: 0
+        }
+
+        .mapping-arrow {
+            color: var(--muted);
+            font-size: 18px;
+            text-align: center
+        }
+
+        .mapping-select {
+            font-family: 'Outfit', sans-serif;
+            font-size: 13px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            width: 100%;
+            cursor: pointer;
+            transition: border-color 0.2s
+        }
+
+        .mapping-select:focus {
+            border-color: var(--accent);
+            outline: none
+        }
+
+        .mapping-select.mapped {
+            border-color: var(--success)
+        }
+
+        .mapping-select.missing {
+            border-color: var(--danger)
+        }
+
+        .mapping-required {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--danger);
+            letter-spacing: 1px;
+            margin-left: 4px
+        }
+
+        /* Preview table */
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px
+        }
+
+        .preview-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .filter-chip {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .filter-chip.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-light, rgba(61, 90, 58, 0.08))
+        }
+
+        .filter-chip .chip-count {
+            font-weight: 700;
+            margin-left: 4px
+        }
+
+        .preview-table-wrap {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: fadeUp 0.4s ease both
+        }
+
+        .preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px
+        }
+
+        .preview-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 2
+        }
+
+        .preview-table th {
+            background: var(--soft);
+            padding: 12px 14px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap
+        }
+
+        .preview-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap
+        }
+
+        .preview-table tbody tr {
+            transition: background 0.2s
+        }
+
+        .preview-table tbody tr:hover {
+            background: var(--soft)
+        }
+
+        .preview-table tbody tr.row-valid {}
+
+        .preview-table tbody tr.row-warning {
+            background: rgba(193, 123, 46, 0.05)
+        }
+
+        .preview-table tbody tr.row-warning:hover {
+            background: rgba(193, 123, 46, 0.1)
+        }
+
+        .preview-table tbody tr.row-error {
+            background: rgba(193, 64, 64, 0.05)
+        }
+
+        .preview-table tbody tr.row-error:hover {
+            background: rgba(193, 64, 64, 0.1)
+        }
+
+        .row-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px
+        }
+
+        .row-status.valid {
+            background: rgba(46, 125, 107, 0.12);
+            color: var(--success)
+        }
+
+        .row-status.warning {
+            background: rgba(193, 123, 46, 0.12);
+            color: var(--warning)
+        }
+
+        .row-status.error {
+            background: rgba(193, 64, 64, 0.12);
+            color: var(--danger)
+        }
+
+        .row-issues {
+            font-size: 11px;
+            color: var(--danger);
+            line-height: 1.4
+        }
+
+        .row-issues .warn {
+            color: var(--warning)
+        }
+
+        .preview-scroll {
+            max-height: 420px;
+            overflow-y: auto;
+            scrollbar-width: thin
+        }
+
+        /* Import actions */
+        .import-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            flex-wrap: wrap
+        }
+
+        .import-actions .left {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .overwrite-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer
+        }
+
+        .overwrite-toggle input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent);
+            cursor: pointer
+        }
+
+        .import-btn-wrap {
+            position: relative
+        }
+
+        .import-btn-wrap .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed
+        }
+
+        /* Success state */
+        .import-success {
+            text-align: center;
+            padding: 48px 24px;
+            animation: fadeUp 0.5s ease both
+        }
+
+        .success-glow {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            animation: glowPulse 2s ease-in-out infinite;
+            color: white
+        }
+
+        @keyframes glowPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(46, 125, 107, 0.3)
+            }
+
+            50% {
+                box-shadow: 0 0 0 20px rgba(46, 125, 107, 0)
+            }
+        }
+
+        .success-glow svg {
+            width: 36px;
+            height: 36px
+        }
+
+        /* Debug panel */
+        .debug-panel {
+            margin-top: 24px;
+            background: var(--soft);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden
+        }
+
+        .debug-toggle {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .debug-content {
+            padding: 0 16px 16px;
+            max-height: 300px;
+            overflow-y: auto
+        }
+
+        .debug-content pre {
+            font-size: 11px;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            white-space: pre-wrap;
+            word-break: break-all;
+            color: var(--muted);
+            line-height: 1.6
+        }
+
+        /* Sheet selector */
+        .sheet-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap
+        }
+
+        .sheet-tab {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            cursor: pointer;
+            transition: all 0.2s
+        }
+
+        .sheet-tab.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-light, rgba(61, 90, 58, 0.06))
+        }
+
+        /* Shake */
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0)
+            }
+
+            10%,
+            30%,
+            50%,
+            70%,
+            90% {
+                transform: translateX(-4px)
+            }
+
+            20%,
+            40%,
+            60%,
+            80% {
+                transform: translateX(4px)
+            }
+        }
+
+        .shake {
+            animation: shake 0.5s ease
+        }
+
+        /* Section visibility */
+        .import-section {
+            display: none
+        }
+
+        .import-section.active {
+            display: block
+        }
+
+        .hidden {
+            display: none !important
+        }
+
+        /* ═══ DATA FACTORY MODAL ═══ */
+        .factory-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px)
+        }
+
+        .factory-overlay.open {
+            opacity: 1;
+            pointer-events: all
+        }
+
+        .factory-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            width: 94%;
+            max-width: 640px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 32px;
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.18);
+            transform: translateY(24px) scale(0.97);
+            transition: transform 0.4s cubic-bezier(.22, .68, 0, 1.2);
+            scrollbar-width: thin
+        }
+
+        .factory-overlay.open .factory-modal {
+            transform: translateY(0) scale(1)
+        }
+
+        .factory-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: var(--soft);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--muted);
+            transition: all 0.2s
+        }
+
+        .factory-close:hover {
+            background: var(--border);
+            color: var(--text)
+        }
+
+        .factory-section {
+            position: relative
+        }
+
+        .factory-opt {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .factory-opt:last-child {
+            border-bottom: 0
+        }
+
+        .factory-opt-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text)
+        }
+
+        .factory-opt-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 2px
+        }
+
+        .factory-opt input[type="number"] {
+            font-family: 'Outfit', sans-serif;
+            width: 80px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1.5px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-size: 14px;
+            text-align: center
+        }
+
+        .factory-opt input[type="range"] {
+            width: 120px;
+            accent-color: var(--accent)
+        }
+
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            cursor: pointer
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0
+        }
+
+        .switch-track {
+            position: absolute;
+            inset: 0;
+            background: var(--border);
+            border-radius: 12px;
+            transition: background 0.2s
+        }
+
+        .switch input:checked+.switch-track {
+            background: var(--accent)
+        }
+
+        .switch-thumb {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15)
+        }
+
+        .switch input:checked~.switch-thumb {
+            transform: translateX(20px)
+        }
+
+        /* Factory progress */
+        .factory-progress {
+            text-align: center;
+            padding: 24px 0
+        }
+
+        .factory-progress-ring {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px
+        }
+
+        .factory-counter {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px
+        }
+
+        .factory-counter-sub {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .factory-pbar {
+            height: 6px;
+            border-radius: 3px;
+            background: var(--soft);
+            overflow: hidden;
+            margin-top: 16px
+        }
+
+        .factory-pfill {
+            height: 100%;
+            border-radius: 3px;
+            background: var(--accent);
+            transition: width 0.15s linear;
+            width: 0%
+        }
+
+        /* Factory summary */
+        .factory-summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0
+        }
+
+        .factory-stat {
+            background: var(--soft);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center
+        }
+
+        .factory-stat-icon {
+            font-size: 22px;
+            margin-bottom: 6px
+        }
+
+        .factory-stat-val {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text)
+        }
+
+        .factory-stat-lbl {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px
+        }
+
+        /* Preview mini table */
+        .factory-preview-wrap {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-top: 16px;
+            scrollbar-width: thin
+        }
+
+        .factory-preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px
+        }
+
+        .factory-preview-table th {
+            background: var(--soft);
+            padding: 8px 10px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--muted);
+            position: sticky;
+            top: 0;
+            z-index: 1
+        }
+
+        .factory-preview-table td {
+            padding: 6px 10px;
+            border-top: 1px solid var(--border)
+        }
+
+        /* Generate demo button */
+        .generate-demo-card {
+            margin-top: 24px;
+            background: linear-gradient(135deg, rgba(61, 90, 58, 0.06) 0%, rgba(61, 90, 58, 0.01) 100%);
+            border: 1.5px dashed var(--accent);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: fadeUp 0.5s ease both;
+            animation-delay: 0.2s
+        }
+
+        .generate-demo-card:hover {
+            background: linear-gradient(135deg, rgba(61, 90, 58, 0.12) 0%, rgba(61, 90, 58, 0.04) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(61, 90, 58, 0.1)
+        }
+
+        .generate-demo-icon {
+            font-size: 28px;
+            margin-bottom: 8px
+        }
+
+        .generate-demo-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px
+        }
+
+        .generate-demo-sub {
+            font-size: 13px;
+            color: var(--muted)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Import Students</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px">Intelligent Excel & CSV parsing engine
+                    </p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <button class="btn btn-ghost btn-sm" id="download-template-btn">↓ Template</button>
+                </div>
+            </div>
+
+            <!-- Step Progress -->
+            <div class="import-steps" id="step-progress" style="--step-progress:0%">
+                <div class="import-step active" data-step="1">
+                    <div class="import-step-dot">1</div>
+                    <div class="import-step-label">Upload</div>
+                </div>
+                <div class="import-step" data-step="2">
+                    <div class="import-step-dot">2</div>
+                    <div class="import-step-label">Map</div>
+                </div>
+                <div class="import-step" data-step="3">
+                    <div class="import-step-dot">3</div>
+                    <div class="import-step-label">Preview</div>
+                </div>
+                <div class="import-step" data-step="4">
+                    <div class="import-step-dot">4</div>
+                    <div class="import-step-label">Import</div>
+                </div>
+            </div>
+
+            <!-- ═══ STEP 1: UPLOAD ═══ -->
+            <div class="import-section active" id="step-upload">
+                <div class="drop-zone" id="drop-zone" style="animation:fadeUp 0.5s ease both">
+                    <div class="drop-zone-icon">📄</div>
+                    <div class="drop-zone-title">Drop your file here</div>
+                    <div class="drop-zone-sub">or click to select from your computer</div>
+                    <div class="drop-zone-formats">
+                        <span class="format-pill">.xlsx</span>
+                        <span class="format-pill">.xls</span>
+                        <span class="format-pill">.csv</span>
+                    </div>
+                    <input type="file" id="file-input" accept=".xlsx,.xls,.csv" style="display:none" />
+                </div>
+
+                <!-- ═══ GENERATE DEMO DATASET ═══ -->
+                <div class="generate-demo-card" id="open-factory-btn">
+                    <div class="generate-demo-icon">🧪</div>
+                    <div class="generate-demo-title">Generate Demo Dataset (CSV)</div>
+                    <div class="generate-demo-sub">Create 100 realistic Indian students with auto-import — one click
+                    </div>
+                </div>
+
+                <!-- Expected Format Reference -->
+                <div style="margin-top:24px;animation:fadeUp 0.5s ease both;animation-delay:0.3s">
+                    <h3 style="font-size:16px;margin-bottom:16px">Expected Format</h3>
+                    <div class="data-table-wrap">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student Name *</th>
+                                    <th>Student ID *</th>
+                                    <th>Class *</th>
+                                    <th>Gender</th>
+                                    <th>Date of Birth</th>
+                                    <th>Roll Number</th>
+                                    <th>Admission No</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Rahul Sharma</td>
+                                    <td>1001</td>
+                                    <td>8A</td>
+                                    <td>Male</td>
+                                    <td>15/03/2010</td>
+                                    <td>01</td>
+                                    <td>ADM1001</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p style="font-size:12px;color:var(--muted);margin-top:8px">* Required columns. Default password:
+                        <code
+                            style="background:var(--soft);padding:2px 8px;border-radius:4px;font-size:11px">{StudentID}@AI</code>
+                    </p>
+                </div>
+            </div>
+
+            <!-- ═══ STEP 1.5: PROCESSING ═══ -->
+            <div class="import-section" id="step-processing">
+                <div class="process-wrap">
+                    <div class="process-ring"></div>
+                    <div class="process-status" id="process-status">Reading file</div>
+                    <div class="process-sub">Scanning structure<span class="process-dots"></span></div>
+                </div>
+            </div>
+
+            <!-- ═══ STEP 2: COLUMN MAPPING ═══ -->
+            <div class="import-section" id="step-mapping">
+                <div style="margin-bottom:24px;animation:fadeUp 0.4s ease both">
+                    <h3 style="font-size:16px;margin-bottom:4px">Column Mapping</h3>
+                    <p style="font-size:13px;color:var(--muted)">We detected your headers. Verify or adjust the mappings
+                        below.</p>
+                </div>
+
+                <!-- Sheet selector (if multiple) -->
+                <div class="sheet-bar hidden" id="sheet-bar"></div>
+
+                <!-- File info -->
+                <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap" id="file-info-pills"></div>
+
+                <!-- Mapping grid -->
+                <div id="mapping-container"></div>
+
+                <!-- Missing fields warning -->
+                <div id="missing-warning" class="hidden"
+                    style="margin-top:16px;padding:14px 18px;border-radius:10px;background:rgba(193,64,64,0.06);border:1px solid rgba(193,64,64,0.15);animation:fadeUp 0.3s ease both">
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                        <span style="font-size:16px">⚠</span>
+                        <span style="font-size:13px;font-weight:600;color:var(--danger)">Missing Required Columns</span>
+                    </div>
+                    <div id="missing-list" style="font-size:12px;color:var(--danger)"></div>
+                </div>
+
+                <div style="display:flex;justify-content:space-between;margin-top:24px">
+                    <button class="btn btn-ghost" id="back-to-upload">← Back</button>
+                    <button class="btn btn-primary" id="proceed-to-preview" disabled>Continue to Preview →</button>
+                </div>
+            </div>
+
+            <!-- ═══ STEP 3: PREVIEW + ANALYTICS ═══ -->
+            <div class="import-section" id="step-preview">
+                <div class="import-split">
+                    <!-- Left: Preview table -->
+                    <div>
+                        <div class="preview-header">
+                            <h3 style="font-size:16px">Data Preview</h3>
+                            <div class="preview-filters" id="preview-filters"></div>
+                        </div>
+
+                        <div class="preview-table-wrap">
+                            <div class="preview-scroll" id="preview-scroll">
+                                <table class="preview-table" id="preview-table">
+                                    <thead id="preview-thead"></thead>
+                                    <tbody id="preview-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Import actions -->
+                        <div class="import-actions">
+                            <div class="left">
+                                <button class="btn btn-ghost" id="back-to-mapping">← Remap</button>
+                                <label class="overwrite-toggle">
+                                    <input type="checkbox" id="overwrite-toggle" />
+                                    <span>Allow overwrite</span>
+                                </label>
+                            </div>
+                            <div class="import-btn-wrap">
+                                <button class="btn btn-primary" id="import-btn" disabled>
+                                    <span id="import-btn-text">Import Students</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Analytics -->
+                    <div class="analytics-panel" id="analytics-panel">
+                        <div class="analytics-title">Import Analytics</div>
+
+                        <div class="analytics-row"><span class="analytics-label">📁 File</span><span
+                                class="analytics-value" id="a-file"
+                                style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+                        </div>
+                        <div class="analytics-row"><span class="analytics-label">📊 Total Rows</span><span
+                                class="analytics-value" id="a-total">0</span></div>
+                        <div class="analytics-row"><span class="analytics-label">✓ Valid</span><span
+                                class="analytics-value success" id="a-valid">0</span></div>
+                        <div class="analytics-row"><span class="analytics-label">⚠ Warnings</span><span
+                                class="analytics-value warning" id="a-warnings">0</span></div>
+                        <div class="analytics-row"><span class="analytics-label">❌ Invalid</span><span
+                                class="analytics-value danger" id="a-errors">0</span></div>
+                        <div class="analytics-row"><span class="analytics-label">📛 Duplicates</span><span
+                                class="analytics-value warning" id="a-dupes">0</span></div>
+                        <div class="analytics-row"><span class="analytics-label">🏫 New Classes</span><span
+                                class="analytics-value" id="a-classes">0</span></div>
+
+                        <div class="confidence-meter">
+                            <div class="confidence-label">Import Confidence</div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" id="confidence-fill" style="width:0%"></div>
+                            </div>
+                            <div class="confidence-score" id="confidence-score">0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Debug panel -->
+                <div class="debug-panel" id="debug-panel">
+                    <button class="debug-toggle" id="debug-toggle" type="button">
+                        <span>🔧 Show Raw JSON (Developer)</span>
+                        <span id="debug-arrow">▸</span>
+                    </button>
+                    <div class="debug-content hidden" id="debug-content">
+                        <pre id="debug-json"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ STEP 4: SUCCESS ═══ -->
+            <div class="import-section" id="step-success">
+                <div class="import-success">
+                    <div class="success-glow">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </div>
+                    <h2 style="margin-bottom:8px">Import Complete</h2>
+                    <p style="color:var(--muted);font-size:14px" id="success-msg">0 students imported successfully.</p>
+
+                    <div class="stats-grid" style="margin-top:24px;max-width:500px;margin-left:auto;margin-right:auto">
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(46,125,107,0.1);color:var(--success)">✓</div>
+                            <div class="stat-label">Added</div>
+                            <div class="stat-value" id="s-added">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(193,123,46,0.1);color:var(--warning)">↻</div>
+                            <div class="stat-label">Updated</div>
+                            <div class="stat-value" id="s-updated">0</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon" style="background:rgba(61,90,58,0.1);color:var(--accent)">📂</div>
+                            <div class="stat-label">Classes</div>
+                            <div class="stat-value" id="s-classes">0</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;gap:12px;justify-content:center;margin-top:28px">
+                        <a href="students.html" class="btn btn-primary">View Students →</a>
+                        <button class="btn btn-ghost" id="import-another">Import Another</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { parseFile, parseSheet, autoMapHeaders, validateRows, importValidatedRows, downloadTemplate } from '../js/excel.js';
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+        import { showToast } from '../js/toast.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+
+        if (!hasPermission(session.role, 'edit_students')) {
+            window.location.replace('dashboard.html');
+        }
+
+        initThemeToggle();
+
+        // RBAC UI Filtering
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        // ═══ STATE ═══
+        let currentFile = null;
+        let parsedData = null;   // { headers, rows, sheetNames, selectedSheet, rawJson }
+        let mappingResult = null; // from autoMapHeaders
+        let currentMappings = {}; // editable copy
+        let validationResult = null;
+        let currentFilter = 'all';
+
+        const FIELD_LABELS = {
+            studentname: 'Student Name',
+            studentid: 'Student ID',
+            class: 'Class',
+            gender: 'Gender',
+            dateofbirth: 'Date of Birth',
+            rollnumber: 'Roll Number',
+            admissionno: 'Admission No',
+        };
+
+        const REQUIRED = ['studentname', 'studentid', 'class'];
+
+        // ═══ STEP NAVIGATION ═══
+        function goToStep(stepNum) {
+            document.querySelectorAll('.import-section').forEach(s => s.classList.remove('active'));
+            const stepMap = { 1: 'step-upload', 1.5: 'step-processing', 2: 'step-mapping', 3: 'step-preview', 4: 'step-success' };
+            const el = document.getElementById(stepMap[stepNum]);
+            if (el) el.classList.add('active');
+
+            // Update step indicators
+            const progressMap = { 1: '0%', 1.5: '10%', 2: '33%', 3: '66%', 4: '100%' };
+            document.getElementById('step-progress').style.setProperty('--step-progress', progressMap[stepNum] || '0%');
+
+            document.querySelectorAll('.import-step').forEach(s => {
+                const sn = parseInt(s.dataset.step);
+                s.classList.remove('active', 'done');
+                if (sn < Math.ceil(stepNum)) s.classList.add('done');
+                else if (sn === Math.ceil(stepNum)) s.classList.add('active');
+            });
+        }
+
+        // ═══ STEP 1: FILE UPLOAD ═══
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+
+        dropZone.addEventListener('click', () => fileInput.click());
+
+        ['dragenter', 'dragover'].forEach(ev => {
+            dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        });
+        ['dragleave', 'drop'].forEach(ev => {
+            dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+        });
+
+        dropZone.addEventListener('drop', e => handleFile(e.dataTransfer.files[0]));
+        fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
+
+        async function handleFile(file) {
+            if (!file) return;
+
+            // Validate file type
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+                dropZone.classList.add('shake');
+                setTimeout(() => dropZone.classList.remove('shake'), 600);
+                showToast('error', 'Invalid file type. Please upload .xlsx, .xls, or .csv');
+                return;
+            }
+
+            currentFile = file;
+            goToStep(1.5);
+
+            // Animated processing
+            const status = document.getElementById('process-status');
+            const phases = ['Reading file', 'Scanning structure', 'Detecting headers', 'Analyzing columns'];
+            for (let i = 0; i < phases.length; i++) {
+                status.textContent = phases[i];
+                await sleep(400 + Math.random() * 300);
+            }
+
+            try {
+                parsedData = await parseFile(file);
+                status.textContent = 'Headers detected!';
+                await sleep(300);
+                initMappingStep();
+            } catch (err) {
+                showToast('error', err.message);
+                goToStep(1);
+            }
+        }
+
+        // ═══ STEP 2: COLUMN MAPPING ═══
+        function initMappingStep() {
+            mappingResult = autoMapHeaders(parsedData.headers);
+            currentMappings = { ...mappingResult.mappings };
+
+            // Sheet selector
+            const sheetBar = document.getElementById('sheet-bar');
+            if (parsedData.sheetNames.length > 1) {
+                sheetBar.classList.remove('hidden');
+                sheetBar.innerHTML = parsedData.sheetNames.map(name =>
+                    `<button class="sheet-tab ${name === parsedData.selectedSheet ? 'active' : ''}" data-sheet="${name}">${name}</button>`
+                ).join('');
+
+                sheetBar.querySelectorAll('.sheet-tab').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        try {
+                            parsedData = await parseSheet(currentFile, btn.dataset.sheet);
+                            initMappingStep();
+                        } catch (err) {
+                            showToast('error', err.message);
+                        }
+                    });
+                });
+            } else {
+                sheetBar.classList.add('hidden');
+            }
+
+            // File info pills
+            document.getElementById('file-info-pills').innerHTML = `
+        <span class="format-pill" style="font-size:12px">📁 ${currentFile.name}</span>
+        <span class="format-pill" style="font-size:12px">📊 ${parsedData.rows.length} rows</span>
+        <span class="format-pill" style="font-size:12px">📋 ${parsedData.headers.length} columns</span>
+        <span class="format-pill" style="font-size:12px">📃 Sheet: ${parsedData.selectedSheet}</span>
+      `;
+
+            renderMappings();
+            goToStep(2);
+        }
+
+        function renderMappings() {
+            const container = document.getElementById('mapping-container');
+            const ALL_FIELDS = ['studentname', 'studentid', 'class', 'gender', 'dateofbirth', 'rollnumber', 'admissionno'];
+
+            const html = parsedData.headers.map((header, idx) => {
+                const mappedField = currentMappings[idx] || '';
+                const isRequired = REQUIRED.includes(mappedField);
+                const sampleVal = parsedData.rows[0] ? String(parsedData.rows[0][idx] || '').substring(0, 30) : '';
+
+                return `
+          <div class="mapping-grid" style="animation-delay:${idx * 0.04}s">
+            <div class="mapping-source">
+              <span class="col-idx">${idx + 1}</span>
+              <div>
+                <div>${header || '<em style="color:var(--muted)">empty</em>'}</div>
+                ${sampleVal ? `<div style="font-size:11px;color:var(--muted);margin-top:2px">e.g. "${sampleVal}"</div>` : ''}
+              </div>
+            </div>
+            <div class="mapping-arrow">→</div>
+            <select class="mapping-select ${mappedField ? 'mapped' : ''}" data-col="${idx}">
+              <option value="">— Skip this column</option>
+              ${ALL_FIELDS.map(f =>
+                    `<option value="${f}" ${mappedField === f ? 'selected' : ''}>${FIELD_LABELS[f]}${REQUIRED.includes(f) ? ' *' : ''}</option>`
+                ).join('')}
+            </select>
+          </div>`;
+            }).join('');
+
+            container.innerHTML = html;
+
+            // Listen for mapping changes
+            container.querySelectorAll('.mapping-select').forEach(sel => {
+                sel.addEventListener('change', () => {
+                    const colIdx = sel.dataset.col;
+                    const value = sel.value;
+
+                    // Remove old mapping for this column
+                    delete currentMappings[colIdx];
+
+                    // Remove any other column mapped to same field
+                    if (value) {
+                        for (const [k, v] of Object.entries(currentMappings)) {
+                            if (v === value && k !== colIdx) delete currentMappings[k];
+                        }
+                        currentMappings[colIdx] = value;
+                    }
+
+                    renderMappings(); // Re-render to update visual state
+                    updateMappingValidation();
+                });
+            });
+
+            updateMappingValidation();
+        }
+
+        function updateMappingValidation() {
+            const mapped = Object.values(currentMappings);
+            const missing = REQUIRED.filter(f => !mapped.includes(f));
+            const warn = document.getElementById('missing-warning');
+            const btn = document.getElementById('proceed-to-preview');
+
+            if (missing.length > 0) {
+                warn.classList.remove('hidden');
+                document.getElementById('missing-list').textContent = missing.map(f => FIELD_LABELS[f]).join(', ');
+                btn.disabled = true;
+            } else {
+                warn.classList.add('hidden');
+                btn.disabled = false;
+            }
+
+            // Update select visual state
+            document.querySelectorAll('.mapping-select').forEach(sel => {
+                sel.classList.remove('mapped', 'missing');
+                if (sel.value) sel.classList.add('mapped');
+            });
+
+            // Highlight missing required
+            REQUIRED.forEach(f => {
+                if (!mapped.includes(f)) {
+                    // No column is mapped to this required field — nothing to highlight
+                }
+            });
+        }
+
+        document.getElementById('back-to-upload').addEventListener('click', () => {
+            goToStep(1);
+            fileInput.value = '';
+            currentFile = null;
+            parsedData = null;
+        });
+
+        document.getElementById('proceed-to-preview').addEventListener('click', () => {
+            initPreviewStep();
+        });
+
+        // ═══ STEP 3: PREVIEW + ANALYTICS ═══
+        function initPreviewStep() {
+            validationResult = validateRows(parsedData.headers, parsedData.rows, currentMappings, session.schoolCode);
+            renderPreviewFilters();
+            renderPreviewTable('all');
+            renderAnalytics();
+            renderDebugJson();
+            goToStep(3);
+        }
+
+        function renderPreviewFilters() {
+            const s = validationResult.stats;
+            const container = document.getElementById('preview-filters');
+            const filters = [
+                { key: 'all', label: 'All', count: s.total },
+                { key: 'valid', label: '✔ Valid', count: s.valid },
+                { key: 'warning', label: '⚠ Warning', count: s.warnings },
+                { key: 'error', label: '❌ Invalid', count: s.errors },
+            ];
+
+            container.innerHTML = filters.map(f =>
+                `<button class="filter-chip ${currentFilter === f.key ? 'active' : ''}" data-filter="${f.key}">${f.label}<span class="chip-count">${f.count}</span></button>`
+            ).join('');
+
+            container.querySelectorAll('.filter-chip').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    currentFilter = btn.dataset.filter;
+                    renderPreviewFilters();
+                    renderPreviewTable(currentFilter);
+                });
+            });
+        }
+
+        function renderPreviewTable(filter) {
+            const rows = filter === 'all'
+                ? validationResult.validatedRows
+                : validationResult.validatedRows.filter(r => r.status === filter);
+
+            // Build header
+            const mappedFields = Object.entries(currentMappings)
+                .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
+                .map(([_, field]) => field);
+
+            const thead = document.getElementById('preview-thead');
+            thead.innerHTML = `<tr>
+        <th style="width:60px">#</th>
+        <th style="width:80px">Status</th>
+        ${mappedFields.map(f => `<th>${FIELD_LABELS[f] || f}</th>`).join('')}
+        <th>Issues</th>
+      </tr>`;
+
+            const tbody = document.getElementById('preview-tbody');
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="${mappedFields.length + 3}" style="text-align:center;color:var(--muted);padding:32px">No rows match this filter</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = rows.map(r => {
+                const statusIcon = r.status === 'valid' ? '✔' : r.status === 'warning' ? '⚠' : '❌';
+                const issues = [
+                    ...r.errors.map(e => `<div>${e}</div>`),
+                    ...r.warnings.map(w => `<div class="warn">${w}</div>`)
+                ].join('');
+
+                return `<tr class="row-${r.status}">
+          <td style="color:var(--muted);font-size:12px">${r.rowIdx + 1}</td>
+          <td><span class="row-status ${r.status}">${statusIcon}</span></td>
+          ${mappedFields.map(f => `<td>${r.record[f] || '<span style="color:var(--border)">—</span>'}</td>`).join('')}
+          <td><div class="row-issues">${issues || '<span style="color:var(--muted)">—</span>'}</div></td>
+        </tr>`;
+            }).join('');
+
+            // Enable import button if at least 1 valid/warning row
+            const importable = validationResult.validatedRows.filter(r => r.status !== 'error').length;
+            document.getElementById('import-btn').disabled = importable === 0;
+            document.getElementById('import-btn-text').textContent = `Import ${importable} Student${importable !== 1 ? 's' : ''}`;
+        }
+
+        function renderAnalytics() {
+            const s = validationResult.stats;
+            document.getElementById('a-file').textContent = currentFile.name;
+            document.getElementById('a-file').title = currentFile.name;
+            document.getElementById('a-total').textContent = s.total;
+            document.getElementById('a-valid').textContent = s.valid;
+            document.getElementById('a-warnings').textContent = s.warnings;
+            document.getElementById('a-errors').textContent = s.errors;
+            document.getElementById('a-dupes').textContent = s.duplicateIds;
+            document.getElementById('a-classes').textContent = s.newClasses.length;
+
+            // Confidence
+            const conf = s.confidence;
+            document.getElementById('confidence-fill').style.width = conf + '%';
+            document.getElementById('confidence-score').textContent = conf + '%';
+        }
+
+        function renderDebugJson() {
+            document.getElementById('debug-json').textContent = JSON.stringify(parsedData.rawJson, null, 2);
+        }
+
+        // Debug toggle
+        document.getElementById('debug-toggle').addEventListener('click', () => {
+            const content = document.getElementById('debug-content');
+            const arrow = document.getElementById('debug-arrow');
+            content.classList.toggle('hidden');
+            arrow.textContent = content.classList.contains('hidden') ? '▸' : '▾';
+        });
+
+        // Back to mapping
+        document.getElementById('back-to-mapping').addEventListener('click', () => goToStep(2));
+
+        // ═══ STEP 4: IMPORT ═══
+        document.getElementById('import-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('import-btn');
+            const btnText = document.getElementById('import-btn-text');
+            btn.disabled = true;
+            btnText.innerHTML = '<div class="spinner" style="width:18px;height:18px;border-width:2px;display:inline-block;vertical-align:middle"></div>';
+
+            const allowOverwrite = document.getElementById('overwrite-toggle').checked;
+
+            try {
+                const result = await importValidatedRows(session.schoolCode, validationResult.validatedRows, allowOverwrite);
+
+                if (result.success) {
+                    document.getElementById('s-added').textContent = result.added;
+                    document.getElementById('s-updated').textContent = result.updated;
+                    document.getElementById('s-classes').textContent = result.classesCreated;
+                    document.getElementById('success-msg').textContent = `${result.totalImported} student${result.totalImported !== 1 ? 's' : ''} imported successfully.`;
+                    goToStep(4);
+                    showToast('success', `${result.totalImported} Students Successfully Imported`);
+                } else {
+                    showToast('error', result.message || 'Import failed');
+                    btn.disabled = false;
+                    btnText.textContent = 'Retry Import';
+                }
+            } catch (err) {
+                showToast('error', 'Import error: ' + err.message);
+                btn.disabled = false;
+                btnText.textContent = 'Retry Import';
+            }
+        });
+
+        // Import another
+        document.getElementById('import-another').addEventListener('click', () => {
+            currentFile = null;
+            parsedData = null;
+            mappingResult = null;
+            currentMappings = {};
+            validationResult = null;
+            currentFilter = 'all';
+            fileInput.value = '';
+            goToStep(1);
+        });
+
+        // ═══ UTILITIES ═══
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        // Template download
+        document.getElementById('download-template-btn').addEventListener('click', () => downloadTemplate());
+
+        // Sidebar toggle
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            document.getElementById('sidebar-toggle').textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+
+        // ═══════════════════════════════════════════
+        // DATA FACTORY MODULE
+        // ═══════════════════════════════════════════
+        import { generateStudents, generateCSV, downloadCSV, autoImport, getNextStudentId, exportJSON } from '../js/data-factory.js';
+
+        // Factory UI state
+        const FACTORY_PHASES = { OPTIONS: 'options', PREVIEW: 'preview', GENERATING: 'generating', SUMMARY: 'summary' };
+        let factoryPhase = FACTORY_PHASES.OPTIONS;
+        let generatedStudents = null;
+        let generatedCsvString = null;
+
+        // Open/close modal
+        document.getElementById('open-factory-btn').addEventListener('click', () => {
+            factoryPhase = FACTORY_PHASES.OPTIONS;
+            renderFactoryUI();
+            document.getElementById('factory-overlay').classList.add('open');
+        });
+
+        document.getElementById('factory-close').addEventListener('click', closeFactory);
+        document.getElementById('factory-overlay').addEventListener('click', (e) => {
+            if (e.target === e.currentTarget) closeFactory();
+        });
+
+        function closeFactory() {
+            document.getElementById('factory-overlay').classList.remove('open');
+        }
+
+        function renderFactoryUI() {
+            const body = document.getElementById('factory-body');
+            const footer = document.getElementById('factory-footer');
+
+            if (factoryPhase === FACTORY_PHASES.OPTIONS) {
+                const startId = getNextStudentId(session.schoolCode);
+                body.innerHTML = `
+                    <div class="factory-opt">
+                        <div><div class="factory-opt-label">Number of Students</div><div class="factory-opt-sub">How many students to generate</div></div>
+                        <input type="number" id="fopt-count" value="100" min="10" max="500" step="10" />
+                    </div>
+                    <div class="factory-opt">
+                        <div><div class="factory-opt-label">Starting ID</div><div class="factory-opt-sub">Auto-incremented from existing data</div></div>
+                        <input type="number" id="fopt-startid" value="${startId}" min="1" />
+                    </div>
+                    <div class="factory-opt">
+                        <div><div class="factory-opt-label">Male / Female Ratio</div><div class="factory-opt-sub" id="fopt-ratio-label">50% / 50%</div></div>
+                        <input type="range" id="fopt-ratio" min="0" max="100" value="50" />
+                    </div>
+                    <div class="factory-opt">
+                        <div><div class="factory-opt-label">Include Date of Birth</div><div class="factory-opt-sub">Age-accurate DOB by class grade</div></div>
+                        <label class="switch"><input type="checkbox" id="fopt-dob" checked /><span class="switch-track"></span><span class="switch-thumb"></span></label>
+                    </div>
+                    <div class="factory-opt">
+                        <div><div class="factory-opt-label">Include Admission No</div><div class="factory-opt-sub">Format: ADM + 4 digits</div></div>
+                        <label class="switch"><input type="checkbox" id="fopt-adm" checked /><span class="switch-track"></span><span class="switch-thumb"></span></label>
+                    </div>
+                    <div class="factory-opt">
+                        <div><div class="factory-opt-label">Replace Existing Data</div><div class="factory-opt-sub">Overwrite students with same ID</div></div>
+                        <label class="switch"><input type="checkbox" id="fopt-replace" /><span class="switch-track"></span><span class="switch-thumb"></span></label>
+                    </div>
+                `;
+                footer.innerHTML = `<button class="btn btn-primary" id="fopt-preview" style="width:100%">Preview Generated Data →</button>`;
+
+                // Ratio slider
+                document.getElementById('fopt-ratio').addEventListener('input', (e) => {
+                    document.getElementById('fopt-ratio-label').textContent = `${e.target.value}% / ${100 - e.target.value}%`;
+                });
+
+                // Preview button
+                document.getElementById('fopt-preview').addEventListener('click', async () => {
+                    const opts = getFactoryOptions();
+                    generatedStudents = await generateStudents(opts);
+                    generatedCsvString = generateCSV(generatedStudents, { includeDOB: opts.includeDOB, includeAdmNo: opts.includeAdmNo });
+                    factoryPhase = FACTORY_PHASES.PREVIEW;
+                    renderFactoryUI();
+                });
+            }
+
+            else if (factoryPhase === FACTORY_PHASES.PREVIEW) {
+                const first10 = generatedStudents.slice(0, 10);
+                body.innerHTML = `
+                    <p style="font-size:13px;color:var(--muted);margin-bottom:8px">Showing first 10 of ${generatedStudents.length} students</p>
+                    <div class="factory-preview-wrap">
+                        <table class="factory-preview-table">
+                            <thead><tr><th>Name</th><th>ID</th><th>Class</th><th>Gender</th><th>DOB</th><th>Roll</th></tr></thead>
+                            <tbody>${first10.map(s => `<tr><td>${s.name}</td><td>${s.studentId}</td><td>${s.className}</td><td>${s.gender}</td><td>${s.dob || '—'}</td><td>${s.rollNumber}</td></tr>`).join('')}</tbody>
+                        </table>
+                    </div>
+                `;
+                footer.innerHTML = `
+                    <div style="display:flex;gap:10px">
+                        <button class="btn btn-ghost" id="fopt-back" style="flex:1">← Options</button>
+                        <button class="btn btn-primary" id="fopt-generate" style="flex:2">🚀 Generate & Import ${generatedStudents.length} Students</button>
+                    </div>
+                `;
+                document.getElementById('fopt-back').addEventListener('click', () => { factoryPhase = FACTORY_PHASES.OPTIONS; renderFactoryUI(); });
+                document.getElementById('fopt-generate').addEventListener('click', startGeneration);
+            }
+
+            else if (factoryPhase === FACTORY_PHASES.GENERATING) {
+                body.innerHTML = `
+                    <div class="factory-progress">
+                        <div class="factory-progress-ring"></div>
+                        <div class="factory-counter" id="factory-counter">0</div>
+                        <div class="factory-counter-sub" id="factory-counter-sub">Generating students...</div>
+                        <div class="factory-pbar"><div class="factory-pfill" id="factory-pfill"></div></div>
+                    </div>
+                `;
+                footer.innerHTML = '';
+            }
+
+            else if (factoryPhase === FACTORY_PHASES.SUMMARY) {
+                // Already rendered by startGeneration
+            }
+        }
+
+        function getFactoryOptions() {
+            return {
+                count: parseInt(document.getElementById('fopt-count').value) || 100,
+                startId: parseInt(document.getElementById('fopt-startid').value) || 1001,
+                maleRatio: parseInt(document.getElementById('fopt-ratio').value) || 50,
+                includeDOB: document.getElementById('fopt-dob').checked,
+                includeAdmNo: document.getElementById('fopt-adm').checked,
+                replace: document.getElementById('fopt-replace').checked,
+            };
+        }
+
+        async function startGeneration() {
+            const opts = getFactoryOptions();
+            factoryPhase = FACTORY_PHASES.GENERATING;
+            renderFactoryUI();
+
+            const counter = document.getElementById('factory-counter');
+            const counterSub = document.getElementById('factory-counter-sub');
+            const pfill = document.getElementById('factory-pfill');
+
+            // Phase 1: Show generating animation
+            await sleep(400);
+
+            // Phase 2: Download CSV
+            counterSub.textContent = 'Creating CSV file...';
+            await sleep(300);
+            downloadCSV(generatedCsvString, generatedStudents.length);
+            counter.textContent = '📄';
+            counterSub.textContent = 'CSV downloaded!';
+            pfill.style.width = '30%';
+            await sleep(500);
+
+            // Phase 3: Auto-import into system
+            counterSub.textContent = 'Importing into system...';
+            pfill.style.width = '40%';
+
+            const result = await autoImport(session.schoolCode, generatedStudents, opts.replace, (current, total) => {
+                const pct = 40 + Math.round((current / total) * 55);
+                pfill.style.width = pct + '%';
+                counter.textContent = current;
+                counterSub.textContent = `Importing student ${current} of ${total}...`;
+            });
+
+            pfill.style.width = '100%';
+            counter.textContent = '✓';
+            counterSub.textContent = 'Complete!';
+            await sleep(600);
+
+            // Phase 4: Show summary
+            const body = document.getElementById('factory-body');
+            const footer = document.getElementById('factory-footer');
+
+            body.innerHTML = `
+                <div style="text-align:center;margin-bottom:16px">
+                    <div class="success-glow" style="width:56px;height:56px;margin:0 auto 12px">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" style="width:24px;height:24px"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                </div>
+                <div class="factory-summary-grid">
+                    <div class="factory-stat"><div class="factory-stat-icon">👨‍🎓</div><div class="factory-stat-val">${result.added}</div><div class="factory-stat-lbl">Students Added</div></div>
+                    <div class="factory-stat"><div class="factory-stat-icon">🏫</div><div class="factory-stat-val">${result.classesCreated}</div><div class="factory-stat-lbl">Classes Created</div></div>
+                    <div class="factory-stat"><div class="factory-stat-icon">♂</div><div class="factory-stat-val">${result.maleCount}</div><div class="factory-stat-lbl">Male Students</div></div>
+                    <div class="factory-stat"><div class="factory-stat-icon">♀</div><div class="factory-stat-val">${result.femaleCount}</div><div class="factory-stat-lbl">Female Students</div></div>
+                </div>
+                <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+                    <span class="format-pill" style="font-size:11px">✔ CSV Downloaded</span>
+                    <span class="format-pill" style="font-size:11px">✔ Students Added to System</span>
+                    <span class="format-pill" style="font-size:11px">✔ Logins Ready</span>
+                    <span class="format-pill" style="font-size:11px">✔ Passwords Hashed (SHA-256)</span>
+                </div>
+            `;
+            footer.innerHTML = `
+                <div style="display:flex;gap:10px">
+                    <button class="btn btn-ghost" id="fopt-download-again" style="flex:1">↓ Download CSV</button>
+                    <button class="btn btn-ghost" id="fopt-export-json" style="flex:1">{ } Export JSON</button>
+                    <a href="students.html" class="btn btn-primary" style="flex:2;text-align:center">View Students →</a>
+                </div>
+            `;
+            factoryPhase = FACTORY_PHASES.SUMMARY;
+
+            document.getElementById('fopt-download-again').addEventListener('click', () => downloadCSV(generatedCsvString, generatedStudents.length));
+            document.getElementById('fopt-export-json').addEventListener('click', () => exportJSON(generatedStudents));
+
+            showToast('success', `${result.added} Students Successfully Generated & Imported`);
+        }
+    </script>
+
+    <!-- Data Factory Modal -->
+    <div class="factory-overlay" id="factory-overlay">
+        <div class="factory-modal" style="position:relative">
+            <button class="factory-close" id="factory-close">✕</button>
+            <div style="margin-bottom:20px">
+                <div
+                    style="font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">
+                    🧪 Data Factory</div>
+                <h2 style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700">Generate Demo Dataset
+                </h2>
+                <p style="font-size:13px;color:var(--muted);margin-top:4px">Create realistic student data, download CSV
+                    & auto-import into system</p>
+            </div>
+            <div id="factory-body" class="factory-section"></div>
+            <div id="factory-footer" style="margin-top:20px"></div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard — AI Native Schools</title>
+    <meta name="description" content="Your cognitive intelligence dashboard — AI Native Schools" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../styles.css" />
+    <link rel="stylesheet" href="dashboard.css" />
+</head>
+
+<body>
+    <!-- Mobile Overlay -->
+    <div class="sidebar-overlay" id="mobile-overlay"></div>
+
+    <div class="student-layout">
+        <!-- ═══ Sidebar ═══ -->
+        <aside class="ssidebar" id="student-sidebar">
+            <a href="dashboard.html" class="sbrand">
+                <div class="sbrand-icon">☆</div>
+                <div class="sbrand-text">
+                    <div class="sbrand-name">AI Native</div>
+                    <div class="sbrand-sub">Student Portal</div>
+                </div>
+            </a>
+
+            <!-- Dynamic nav — rendered by app.js -->
+            <nav class="snav" id="sidebar-nav"></nav>
+
+            <!-- User Profile Footer -->
+            <div class="user-profile">
+                <div class="user-profile-info">
+                    <div class="user-avatar" id="user-initial">S</div>
+                    <div>
+                        <div class="user-name" id="user-name-display">Student</div>
+                        <div class="user-class" id="user-class-display">Class</div>
+                    </div>
+                </div>
+                <button class="logout-btn" id="logout-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ═══ Main Content ═══ -->
+        <main class="smain">
+            <div class="sheader">
+                <div>
+                    <h1 class="sheader-title" id="welcome-text">Welcome back</h1>
+                    <p class="sheader-sub">Your cognitive intelligence overview.</p>
+                </div>
+                <div class="sheader-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <button id="mobile-menu-btn" class="btn-icon" aria-label="Menu" style="display:none">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SPA Section Container — rendered by app.js -->
+            <div id="section-container"></div>
+        </main>
+    </div>
+
+    <!-- ═══ Assessment Modal ═══ -->
+    <div class="modal-overlay" id="assessment-modal">
+        <div class="particles" id="particles-container"></div>
+        <div class="modal-card">
+            <button class="modal-close" id="close-assessment-modal">✕</button>
+            <div class="modal-icon">🧠</div>
+            <h2 class="modal-title" id="modal-welcome">Hello 👋<br />Welcome to your Cognitive Journey.</h2>
+            <p class="modal-desc">This assessment maps your psychological architecture across 8 deep insight dimensions.
+                Take your time, answer authentically.</p>
+            <div class="modal-stats">
+                <div class="modal-stat">
+                    <div class="modal-stat-val" id="modal-attempt-count">0</div>
+                    <div class="modal-stat-lbl">Prior Attempts</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-val" id="modal-last-date">—</div>
+                    <div class="modal-stat-lbl">Last Attempt</div>
+                </div>
+            </div>
+            <button class="modal-action" id="start-test-btn">
+                Begin Assessment
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round">
+                    <line x1="5" y1="12" x2="19" y2="12" />
+                    <polyline points="12 5 19 12 12 19" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- App Controller -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy & Compliance — AI Native Schools</title>
+    <meta name="description" content="Data governance, consent management, and audit logging" />
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+        .comp-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px
+        }
+
+        .comp-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px
+        }
+
+        .comp-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .comp-stat {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 16px
+        }
+
+        .comp-stat-item {
+            flex: 1;
+            min-width: 100px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center
+        }
+
+        .comp-stat-val {
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1
+        }
+
+        .comp-stat-lbl {
+            font-size: .75rem;
+            color: var(--muted);
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .audit-table {
+            width: 100%;
+            font-size: 13px;
+            border-collapse: collapse
+        }
+
+        .audit-table th,
+        .audit-table td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .audit-table th {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--muted);
+            font-weight: 600;
+            background: var(--bg)
+        }
+
+        .audit-table tr:hover td {
+            background: var(--soft)
+        }
+
+        .comp-badge {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .badge-green {
+            background: rgba(74, 206, 160, .12);
+            color: #4acea0
+        }
+
+        .badge-yellow {
+            background: rgba(232, 146, 74, .12);
+            color: #e8924a
+        }
+
+        .badge-red {
+            background: rgba(232, 92, 122, .12);
+            color: #e85c7a
+        }
+
+        .badge-blue {
+            background: rgba(123, 156, 245, .12);
+            color: #7b9cf5
+        }
+
+        .consent-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .consent-row:last-child {
+            border-bottom: none
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <a href="cohort-intelligence.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                    <span>Cohort Analytics</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+                <a href="compliance.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span>Compliance</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Privacy & Compliance</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px">Data governance, consent tracking, and
+                        audit logging.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                </div>
+            </div>
+
+            <!-- Status Cards -->
+            <div class="comp-grid">
+                <div class="comp-card">
+                    <h3>🛡️ Governance Status</h3>
+                    <div class="comp-stat">
+                        <div class="comp-stat-item">
+                            <div class="comp-stat-val" style="color:#4acea0" id="enc-status">SIM</div>
+                            <div class="comp-stat-lbl">Encryption</div>
+                        </div>
+                        <div class="comp-stat-item">
+                            <div class="comp-stat-val" id="audit-count">0</div>
+                            <div class="comp-stat-lbl">Audit Events</div>
+                        </div>
+                        <div class="comp-stat-item">
+                            <div class="comp-stat-val" style="color:#7b9cf5" id="consent-rate">0%</div>
+                            <div class="comp-stat-lbl">Consent Rate</div>
+                        </div>
+                    </div>
+                    <div style="font-size:13px;color:var(--muted)">
+                        <strong>Encryption:</strong> Base64 simulation (MVP) → AES-256-GCM (Production)<br />
+                        <strong>Storage:</strong> localStorage with isolated audit log key<br />
+                        <strong>Compliance framework:</strong> Ready for FERPA / COPPA extension
+                    </div>
+                </div>
+
+                <div class="comp-card">
+                    <h3>📋 Consent Management</h3>
+                    <div id="consent-container">
+                        <p style="color:var(--muted);font-size:14px">No consent records found.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Audit Log -->
+            <div class="comp-card" style="margin-bottom:32px">
+                <h3>📜 Audit Log</h3>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Chronological record of all system
+                    actions, access events, and data operations.</p>
+                <div style="overflow-x:auto">
+                    <table class="audit-table" id="audit-table">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Role</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="audit-body">
+                            <tr>
+                                <td colspan="4" style="text-align:center;color:var(--muted);padding:20px">No audit
+                                    events recorded yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load governance engine -->
+    <script src="../core/governance.js"></script>
+
+    <script type="module">
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+        initThemeToggle();
+
+        // RBAC: hide import/classes for non-editors
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        // Log this access
+        if (typeof logAuditEvent === 'function') {
+            logAuditEvent(session.role, 'Accessed: Compliance', { user: session.email || session.name });
+        }
+
+        // ── Render governance data ──
+        function renderCompliance() {
+            // Audit log
+            const log = typeof getAuditLog === 'function' ? getAuditLog() : [];
+            document.getElementById('audit-count').textContent = String(log.length);
+
+            const auditBody = document.getElementById('audit-body');
+            if (log.length > 0) {
+                auditBody.innerHTML = log.slice(-50).reverse().map(entry => {
+                    const roleBadge = entry.role === 'admin' ? 'badge-blue' : entry.role === 'student' ? 'badge-green' : 'badge-yellow';
+                    return `
+                        <tr>
+                            <td style="font-size:12px;white-space:nowrap">${new Date(entry.timestamp).toLocaleString()}</td>
+                            <td><span class="comp-badge ${roleBadge}">${entry.role}</span></td>
+                            <td>${entry.action}</td>
+                            <td style="font-size:12px;color:var(--muted)">${entry.metadata ? JSON.stringify(entry.metadata).substring(0, 80) : '—'}</td>
+                        </tr>`;
+                }).join('');
+            }
+
+            // Consent data
+            const consents = typeof window.getAllConsents === 'function'
+                ? (() => { try { const raw = localStorage.getItem('ai_native_consent_flags'); return raw ? JSON.parse(raw) : {}; } catch { return {}; } })()
+                : {};
+
+            const consentKeys = Object.keys(consents);
+            const consentedCount = Object.values(consents).filter(c => c.dataProcessing).length;
+            const total = consentKeys.length;
+            document.getElementById('consent-rate').textContent = total > 0 ? Math.round((consentedCount / total) * 100) + '%' : 'N/A';
+
+            const consentContainer = document.getElementById('consent-container');
+            if (consentKeys.length > 0) {
+                consentContainer.innerHTML = consentKeys.slice(0, 20).map(id => {
+                    const c = consents[id];
+                    const statusBadge = c.dataProcessing ? 'badge-green' : 'badge-red';
+                    const statusText = c.dataProcessing ? 'Granted' : 'Pending';
+                    return `
+                        <div class="consent-row">
+                            <span style="font-size:14px">Student ID: <strong>${id}</strong></span>
+                            <span class="comp-badge ${statusBadge}">${statusText}</span>
+                        </div>`;
+                }).join('');
+            } else {
+                consentContainer.innerHTML = '<p style="color:var(--muted);font-size:14px">No consent records found. Consent flags are created when students take assessments.</p>';
+            }
+        }
+
+        renderCompliance();
+
+        // Sidebar
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            document.getElementById('sidebar-toggle').textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+    </script>
+</body>
+
+</html>

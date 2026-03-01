@@ -1,0 +1,2002 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCEAN Psychometric Assessment</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Outfit:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0d0d12;
+            --surface: #13131c;
+            --card: #181824;
+            --border: #262635;
+            --border-light: #32324a;
+            --text: #ededf5;
+            --muted: #7070a0;
+            --soft: #1e1e2e;
+            --O: #e8924a;
+            --O-dim: rgba(232, 146, 74, 0.12);
+            --C: #4acea0;
+            --C-dim: rgba(74, 206, 160, 0.12);
+            --E: #e85c7a;
+            --E-dim: rgba(232, 92, 122, 0.12);
+            --A: #7b9cf5;
+            --A-dim: rgba(123, 156, 245, 0.12);
+            --N: #b07cf5;
+            --N-dim: rgba(176, 124, 245, 0.12);
+            --r: 14px;
+            --sh: 0 4px 32px rgba(0, 0, 0, 0.35);
+        }
+
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            line-height: 1.65;
+            font-weight: 400;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 50% 35% at 15% 20%, rgba(123, 156, 245, 0.07) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 85% 75%, rgba(176, 124, 245, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 52px 24px 100px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* TYPOGRAPHY */
+        h1,
+        h2,
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        /* HEADER */
+        .site-header {
+            text-align: center;
+            margin-bottom: 56px;
+            animation: rise 0.9s cubic-bezier(.22, .68, 0, 1.2) both;
+            position: relative;
+        }
+
+        .theme-toggle-btn {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--soft);
+            border: 1px solid var(--border);
+            color: var(--text);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle-btn:hover {
+            background: var(--border);
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 22px;
+        }
+
+        .epip {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--O);
+            display: inline-block;
+        }
+
+        h1.hero {
+            font-size: clamp(38px, 7vw, 66px);
+            letter-spacing: -1.5px;
+            margin-bottom: 18px;
+        }
+
+        h1.hero em {
+            font-style: italic;
+            color: var(--O);
+        }
+
+        .hero-sub {
+            font-size: 15px;
+            color: var(--muted);
+            max-width: 420px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        .ocean-pills {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 28px;
+        }
+
+        .pill {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            padding: 5px 14px;
+            border-radius: 999px;
+            border: 1px solid;
+        }
+
+        .pill-O {
+            color: var(--O);
+            border-color: rgba(232, 146, 74, 0.35);
+            background: var(--O-dim);
+        }
+
+        .pill-C {
+            color: var(--C);
+            border-color: rgba(74, 206, 160, 0.35);
+            background: var(--C-dim);
+        }
+
+        .pill-E {
+            color: var(--E);
+            border-color: rgba(232, 92, 122, 0.35);
+            background: var(--E-dim);
+        }
+
+        .pill-A {
+            color: var(--A);
+            border-color: rgba(123, 156, 245, 0.35);
+            background: var(--A-dim);
+        }
+
+        .pill-N {
+            color: var(--N);
+            border-color: rgba(176, 124, 245, 0.35);
+            background: var(--N-dim);
+        }
+
+        /* PROGRESS */
+        #progressWrap {
+            display: none;
+            margin-bottom: 36px;
+        }
+
+        .prog-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .prog-label {
+            font-size: 13px;
+            color: var(--muted);
+            font-weight: 500;
+        }
+
+        .timer-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--muted);
+            background: var(--soft);
+            padding: 5px 14px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+        }
+
+        .tdot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--E);
+            animation: blink 1.4s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1
+            }
+
+            50% {
+                opacity: 0.25
+            }
+        }
+
+        .prog-track {
+            height: 4px;
+            background: var(--soft);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .prog-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--O), var(--C), var(--E), var(--A), var(--N));
+            border-radius: 999px;
+            transition: width 0.55s cubic-bezier(.22, .68, 0, 1.2);
+            width: 0%;
+        }
+
+        /* SECTIONS */
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: rise 0.45s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        /* INTRO */
+        .intro-ocean {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            margin: 32px 0;
+        }
+
+        @media(max-width:500px) {
+            .intro-ocean {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .io-card {
+            border-radius: 10px;
+            padding: 16px 10px;
+            text-align: center;
+            border: 1px solid transparent;
+        }
+
+        .io-card.O {
+            background: var(--O-dim);
+            border-color: rgba(232, 146, 74, 0.2);
+        }
+
+        .io-card.C {
+            background: var(--C-dim);
+            border-color: rgba(74, 206, 160, 0.2);
+        }
+
+        .io-card.E {
+            background: var(--E-dim);
+            border-color: rgba(232, 92, 122, 0.2);
+        }
+
+        .io-card.A {
+            background: var(--A-dim);
+            border-color: rgba(123, 156, 245, 0.2);
+        }
+
+        .io-card.N {
+            background: var(--N-dim);
+            border-color: rgba(176, 124, 245, 0.2);
+        }
+
+        .io-letter {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .io-card.O .io-letter {
+            color: var(--O);
+        }
+
+        .io-card.C .io-letter {
+            color: var(--C);
+        }
+
+        .io-card.E .io-letter {
+            color: var(--E);
+        }
+
+        .io-card.A .io-letter {
+            color: var(--A);
+        }
+
+        .io-card.N .io-letter {
+            color: var(--N);
+        }
+
+        .io-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .io-desc {
+            font-size: 10px;
+            color: var(--muted);
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        .intro-rules {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 22px 26px;
+            margin-bottom: 28px;
+            list-style: none;
+        }
+
+        .intro-rules li {
+            padding: 9px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--muted);
+            display: flex;
+            gap: 12px;
+            align-items: baseline;
+        }
+
+        .intro-rules li:last-child {
+            border-bottom: none;
+        }
+
+        .intro-rules li strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        /* QUESTION CARDS */
+        .q-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .trait-tag {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            padding: 4px 11px;
+            border-radius: 5px;
+        }
+
+        .q-counter {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .q-heading {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(19px, 3.2vw, 25px);
+            line-height: 1.35;
+            margin-bottom: 6px;
+            margin-top: 6px;
+        }
+
+        .q-sub {
+            font-size: 13px;
+            color: var(--muted);
+            margin-bottom: 26px;
+            font-style: italic;
+        }
+
+        /* LIKERT */
+        .likert-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 26px;
+            box-shadow: var(--sh);
+            margin-bottom: 10px;
+        }
+
+        .likert-stmt {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.55;
+            color: var(--text);
+            margin-bottom: 24px;
+        }
+
+        .likert-row {
+            display: flex;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .lk-opt {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 14px 4px 12px;
+            cursor: pointer;
+            transition: all 0.17s;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+        }
+
+        .lk-opt:last-child {
+            border-right: none;
+        }
+
+        .lk-opt:hover {
+            background: var(--soft);
+        }
+
+        .lk-opt.selected {
+            background: var(--text);
+        }
+
+        .lk-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 5px;
+            color: var(--text);
+        }
+
+        .lk-opt.selected .lk-num {
+            color: var(--bg);
+        }
+
+        .lk-word {
+            font-size: 9px;
+            font-weight: 600;
+            text-align: center;
+            letter-spacing: 0.3px;
+            color: var(--muted);
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .lk-opt.selected .lk-word {
+            color: rgba(0, 0, 0, 0.45);
+        }
+
+        .likert-ends {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 9px;
+            padding: 0 2px;
+        }
+
+        /* FORCED CHOICE */
+        .scenario-box {
+            background: var(--soft);
+            border-left: 3px solid var(--border-light);
+            border-radius: 0 8px 8px 0;
+            padding: 15px 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--muted);
+            margin-bottom: 18px;
+            font-style: italic;
+        }
+
+        .fc-grid {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .fc-opt {
+            background: var(--card);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 18px 20px;
+            cursor: pointer;
+            transition: all 0.18s;
+            box-shadow: var(--sh);
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+        }
+
+        .fc-opt:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .fc-opt.selected {
+            border-color: var(--text);
+            background: rgba(237, 237, 245, 0.05);
+        }
+
+        .fc-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1.5px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--muted);
+            flex-shrink: 0;
+            transition: all 0.18s;
+        }
+
+        .fc-opt.selected .fc-badge {
+            background: var(--text);
+            border-color: var(--text);
+            color: var(--bg);
+        }
+
+        .fc-text {
+            font-size: 15px;
+            line-height: 1.55;
+            padding-top: 2px;
+        }
+
+        /* BUTTONS */
+        .btn-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 26px;
+            gap: 12px;
+        }
+
+        .btn {
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-primary {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.88;
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            background: var(--soft);
+            color: var(--text);
+        }
+
+        .skip-btn {
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            background: none;
+            border: none;
+            font-family: inherit;
+        }
+
+        /* CONFIDENCE */
+        .conf-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 28px;
+            box-shadow: var(--sh);
+            margin-top: 20px;
+        }
+
+        .conf-label {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 22px;
+        }
+
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 5px;
+            background: var(--border);
+            border-radius: 999px;
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--text);
+            cursor: pointer;
+            border: 3px solid var(--bg);
+            box-shadow: 0 0 0 1.5px var(--text);
+        }
+
+        .conf-ends {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        .conf-val-display {
+            text-align: center;
+            margin-top: 16px;
+            font-family: 'Playfair Display', serif;
+            font-size: 15px;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* ═══ RESULTS ═══ */
+        .results-header {
+            text-align: center;
+            margin-bottom: 44px;
+            animation: rise 0.7s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        .results-header h2 {
+            font-size: clamp(30px, 5.5vw, 46px);
+            margin-bottom: 8px;
+        }
+
+        .results-header p {
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        /* Identity Card */
+        .identity-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16162a 100%);
+            border: 1px solid var(--border-light);
+            border-radius: var(--r);
+            padding: 36px 32px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            animation: rise 0.6s cubic-bezier(.22, .68, 0, 1.2) both 0.1s;
+            box-shadow: var(--sh);
+        }
+
+        .identity-card::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(232, 146, 74, 0.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .id-eyebrow {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .id-type {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(26px, 4.5vw, 38px);
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        .id-tagline {
+            font-size: 15px;
+            color: var(--muted);
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+
+        .id-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+        }
+
+        /* Section divider */
+        .res-section {
+            margin-bottom: 14px;
+            animation: rise 0.5s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        .res-section-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Twin grid */
+        .twin-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        @media(max-width:480px) {
+            .twin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .profile-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px;
+            box-shadow: var(--sh);
+            animation: rise 0.5s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        .profile-card:nth-child(2) {
+            animation-delay: 0.07s;
+        }
+
+        .pc-icon {
+            font-size: 26px;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .pc-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .pc-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        .pc-body {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* Trait narrative */
+        .trait-narrative {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 24px 26px;
+            margin-bottom: 12px;
+            box-shadow: var(--sh);
+            animation: rise 0.5s cubic-bezier(.22, .68, 0, 1.2) both;
+            display: flex;
+            gap: 18px;
+            align-items: flex-start;
+        }
+
+        .tn-letter {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .tn-body {
+            flex: 1;
+        }
+
+        .tn-trait-name {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .tn-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .tn-text {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* Insight blocks */
+        .insight-block {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 26px 28px;
+            margin-bottom: 12px;
+            box-shadow: var(--sh);
+            animation: rise 0.5s cubic-bezier(.22, .68, 0, 1.2) both;
+        }
+
+        .ib-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
+        }
+
+        .ib-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .ib-meta {
+            flex: 1;
+        }
+
+        .ib-label {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 4px;
+        }
+
+        .ib-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        .ib-badge {
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 14px;
+            border-radius: 999px;
+            flex-shrink: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-green {
+            background: rgba(74, 206, 160, 0.15);
+            color: #4acea0;
+            border: 1px solid rgba(74, 206, 160, 0.3);
+        }
+
+        .badge-amber {
+            background: rgba(232, 146, 74, 0.15);
+            color: #e8924a;
+            border: 1px solid rgba(232, 146, 74, 0.3);
+        }
+
+        .badge-red {
+            background: rgba(232, 92, 122, 0.15);
+            color: #e85c7a;
+            border: 1px solid rgba(232, 92, 122, 0.3);
+        }
+
+        .badge-purple {
+            background: rgba(176, 124, 245, 0.15);
+            color: #b07cf5;
+            border: 1px solid rgba(176, 124, 245, 0.3);
+        }
+
+        .badge-blue {
+            background: rgba(123, 156, 245, 0.15);
+            color: #7b9cf5;
+            border: 1px solid rgba(123, 156, 245, 0.3);
+        }
+
+        .ib-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 0 0 16px;
+        }
+
+        .ib-text {
+            font-size: 14px;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        .ib-text strong {
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .ib-points {
+            list-style: none;
+            display: grid;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .ib-points li {
+            display: flex;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .ib-points li::before {
+            content: '▸';
+            color: var(--border-light);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Overall narrative */
+        .overall-card {
+            background: linear-gradient(135deg, rgba(123, 156, 245, 0.08) 0%, rgba(176, 124, 245, 0.08) 100%);
+            border: 1px solid rgba(123, 156, 245, 0.2);
+            border-radius: var(--r);
+            padding: 32px;
+            margin-bottom: 24px;
+            animation: rise 0.6s cubic-bezier(.22, .68, 0, 1.2) both 0.2s;
+        }
+
+        .oc-label {
+            font-size: 10px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--muted);
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+
+        .oc-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(16px, 2.5vw, 19px);
+            font-style: italic;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ════ RESPONSIVE ════ */
+        @media (max-width: 768px) {
+            .wrap {
+                padding: 32px 20px 80px;
+            }
+
+            h1.hero {
+                font-size: 32px;
+                letter-spacing: -0.5px;
+            }
+
+            .hero-sub {
+                font-size: 14px;
+            }
+
+            .lk-grid {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+
+            .lk-opt {
+                padding: 14px 16px;
+                margin: 0;
+            }
+
+            .btn-row {
+                flex-direction: column-reverse;
+                gap: 16px;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+                justify-content: center;
+            }
+
+            .identity-card {
+                padding: 24px 20px;
+            }
+
+            .id-type {
+                font-size: 28px;
+            }
+
+            .trait-card {
+                padding: 20px;
+            }
+
+            .trait-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .trait-badge {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .sc-main {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .wrap {
+                padding: 24px 16px 60px;
+            }
+
+            .ocean-pills {
+                gap: 6px;
+            }
+
+            .pill {
+                padding: 4px 10px;
+                font-size: 10px;
+            }
+
+            .fc-opt {
+                padding: 14px 16px;
+            }
+
+            .fc-badge {
+                width: 24px;
+                height: 24px;
+                font-size: 11px;
+            }
+
+            .fc-text {
+                font-size: 14px;
+            }
+
+            .results-header h2 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+
+        <div class="site-header">
+            <button class="theme-toggle-btn" id="theme-toggle-test" aria-label="Toggle theme">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <div class="eyebrow"><span class="epip"></span> Big Five · OCEAN Model · Psychometric</div>
+            <h1 class="hero">Decode your<br><em>inner architecture</em></h1>
+            <p class="hero-sub">A validated psychometric assessment across five core personality dimensions — no scores,
+                only insights</p>
+            <div class="ocean-pills">
+                <span class="pill pill-O">Openness</span>
+                <span class="pill pill-C">Conscientiousness</span>
+                <span class="pill pill-E">Extraversion</span>
+                <span class="pill pill-A">Agreeableness</span>
+                <span class="pill pill-N">Neuroticism</span>
+            </div>
+        </div>
+
+        <div id="progressWrap">
+            <div class="prog-meta">
+                <div class="prog-label" id="progText">Question 1 of 30</div>
+                <div class="timer-chip"><span class="tdot"></span><span id="timerDisp">00:00</span></div>
+            </div>
+            <div class="prog-track">
+                <div class="prog-fill" id="progFill"></div>
+            </div>
+        </div>
+
+        <!-- INTRO -->
+        <div class="section active" id="sec-intro">
+            <div class="intro-ocean">
+                <div class="io-card O"><span class="io-letter">O</span>
+                    <div class="io-name">Openness</div>
+                    <div class="io-desc">Curiosity &amp; imagination</div>
+                </div>
+                <div class="io-card C"><span class="io-letter">C</span>
+                    <div class="io-name">Conscien.</div>
+                    <div class="io-desc">Discipline &amp; planning</div>
+                </div>
+                <div class="io-card E"><span class="io-letter">E</span>
+                    <div class="io-name">Extraversion</div>
+                    <div class="io-desc">Energy &amp; sociability</div>
+                </div>
+                <div class="io-card A"><span class="io-letter">A</span>
+                    <div class="io-name">Agreeableness</div>
+                    <div class="io-desc">Empathy &amp; cooperation</div>
+                </div>
+                <div class="io-card N"><span class="io-letter">N</span>
+                    <div class="io-name">Neuroticism</div>
+                    <div class="io-desc">Emotional reactivity</div>
+                </div>
+            </div>
+            <ul class="intro-rules">
+                <li>⏱ <strong>Timed</strong> — no limit, but your response pace is recorded</li>
+                <li>📋 <strong>30 items</strong> — Likert scales, forced choices &amp; situational scenarios</li>
+                <li>🧠 <strong>8 insight dimensions</strong> — Nature, Thinking Pattern, EQ, Leadership, Burnout Risk,
+                    Impulsivity, Calibration &amp; Persistence</li>
+                <li>🚫 <strong>No scores shown</strong> — only meaningful qualitative profiles</li>
+                <li>✏️ <strong>Answer honestly</strong> — there are no right or wrong answers</li>
+            </ul>
+            <div class="btn-row" style="justify-content:center">
+                <button class="btn btn-primary" onclick="startAssessment()"
+                    style="padding:15px 52px;font-size:16px">Begin Assessment →</button>
+            </div>
+        </div>
+
+        <!-- QUESTION CONTAINER -->
+        <div id="qContainer"></div>
+
+        <!-- CONFIDENCE -->
+        <div class="section" id="sec-conf">
+            <div class="q-meta">
+                <div class="trait-tag" style="background:rgba(112,112,160,0.15);color:var(--muted)">Final Step</div>
+            </div>
+            <h2 class="q-heading">How well do you think this test captured who you really are?</h2>
+            <p class="q-sub">Your honest rating helps measure self-awareness and confidence calibration.</p>
+            <div class="conf-card">
+                <div class="conf-label">Drag to rate how accurately this assessment reflects your actual personality
+                </div>
+                <input type="range" min="0" max="100" value="60" id="confSlider" oninput="updateConfLabel(this.value)">
+                <div class="conf-ends"><span>Completely inaccurate</span><span>Perfectly accurate</span></div>
+                <div class="conf-val-display" id="confValDisp">"Moderately accurate — captures some parts of me"</div>
+            </div>
+            <div class="btn-row">
+                <button class="btn btn-ghost" onclick="navBack(30)">← Back</button>
+                <button class="btn btn-primary" onclick="showResults()">Reveal My Profile →</button>
+            </div>
+        </div>
+
+        <!-- RESULTS -->
+        <div class="section" id="sec-results">
+            <div class="results-header">
+                <div class="eyebrow" style="justify-content:center"><span class="epip"></span> Profile Complete</div>
+                <h2>Your Personality Profile</h2>
+                <p id="resSubtitle"></p>
+            </div>
+            <div id="resBody"></div>
+            <div class="btn-row" style="justify-content:center;margin-top:48px;gap:16px">
+                <button class="btn btn-ghost" onclick="resetAll()">↩ Retake Assessment</button>
+                <button class="btn btn-primary" onclick="window.location.href='student/dashboard.html'">Go to Dashboard
+                    →</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ═══ Cognitive Intelligence Infrastructure Engines ═══ -->
+    <script src="core/cognitive-growth-index.js"></script>
+    <script src="core/escalation-engine.js"></script>
+    <script src="core/intervention-analytics.js"></script>
+    <script src="core/correlation-engine.js"></script>
+    <script src="core/dropout-model.js"></script>
+    <script src="core/narrative-generator.js"></script>
+    <script src="core/resilience-index.js"></script>
+    <script src="core/strategy-profiler.js"></script>
+    <script src="core/governance.js"></script>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // QUESTION BANK — 30 items
+        // ═══════════════════════════════════════════════
+        const QS = [
+            { id: 0, trait: 'O', dir: 1, type: 'likert5', stmt: 'I enjoy exploring abstract ideas, philosophical questions, and concepts without obvious practical value.' },
+            { id: 1, trait: 'O', dir: 1, type: 'forced', scenario: 'You have an unexpectedly free weekend.', opts: [{ text: 'Explore somewhere new, start a creative project, or dive into an unfamiliar topic.', sc: 5 }, { text: 'Return to familiar comforts — a known restaurant, a favourite book, a usual routine.', sc: 1 }] },
+            { id: 2, trait: 'O', dir: 1, type: 'likert5', stmt: 'I find beauty and meaning in art, music, literature, or the natural world.' },
+            { id: 3, trait: 'O', dir: -1, type: 'likert5', stmt: 'I prefer clear, proven methods and feel uncomfortable when things are too open-ended or ambiguous.' },
+            { id: 4, trait: 'O', dir: 1, type: 'situational', scenario: 'A colleague pitches a radically unconventional solution your team has never tried before.', opts: [{ text: 'Lean in with curiosity — ask them to walk you through it fully before forming an opinion.', sc: 5 }, { text: 'Listen carefully but look for prior examples before buying in.', sc: 3 }, { text: 'Respectfully push back — untested approaches introduce unnecessary risk.', sc: 1 }] },
+            { id: 5, trait: 'O', dir: 1, type: 'likert5', stmt: 'I often imagine alternative ways the world could be — different societies, systems, or futures.' },
+            { id: 6, trait: 'C', dir: 1, type: 'likert5', stmt: 'I keep my tasks, commitments, and physical spaces well-organized.' },
+            { id: 7, trait: 'C', dir: 1, type: 'forced', scenario: 'A major project is due in two weeks.', opts: [{ text: 'Break it into milestones, assign each day a target, and start immediately.', sc: 5 }, { text: 'Think about it loosely and let momentum build naturally as the deadline nears.', sc: 1 }] },
+            { id: 8, trait: 'C', dir: -1, type: 'likert5', stmt: 'I often find myself distracted or moving to something new before finishing what I started.' },
+            { id: 9, trait: 'C', dir: 1, type: 'situational', scenario: "You're halfway through an important task when something more interesting appears.", opts: [{ text: "Finish the original task first — leaving things incomplete bothers me.", sc: 5 }, { text: 'Quickly evaluate priority, then switch only if it genuinely warrants it.', sc: 3 }, { text: 'Switch — motivation and momentum matter more than rigid task order.', sc: 1 }] },
+            { id: 10, trait: 'C', dir: 1, type: 'likert5', stmt: 'I follow through on promises and rarely miss deadlines.' },
+            { id: 11, trait: 'C', dir: 1, type: 'likert5', stmt: 'Before making a decision, I think carefully about long-term consequences and risks.' },
+            { id: 12, trait: 'E', dir: 1, type: 'likert5', stmt: 'Being around a group of people energizes me — I feel more alive in social settings.' },
+            { id: 13, trait: 'E', dir: -1, type: 'likert5', stmt: 'I strongly prefer deep one-on-one conversations over group socializing.' },
+            { id: 14, trait: 'E', dir: 1, type: 'forced', scenario: 'You arrive at a networking event where you know almost nobody.', opts: [{ text: 'Feel a buzz of excitement — you scan the room and start introducing yourself.', sc: 5 }, { text: 'Feel some anxiety — you gravitate toward a familiar face or stay at the margins.', sc: 1 }] },
+            { id: 15, trait: 'E', dir: 1, type: 'likert5', stmt: "I'm often the one to initiate conversations, make plans, and bring people together." },
+            { id: 16, trait: 'E', dir: 1, type: 'situational', scenario: 'Your team needs someone to present to senior leadership. Nobody volunteers.', opts: [{ text: 'Volunteer immediately — presenting to a room comes naturally to me.', sc: 5 }, { text: 'Offer to contribute but prefer a supporting role over leading the presentation.', sc: 3 }, { text: "Wait to be assigned — presenting isn't where I add the most value.", sc: 1 }] },
+            { id: 17, trait: 'E', dir: -1, type: 'likert5', stmt: 'After a full day of social engagement, I genuinely need quiet solitude to recover.' },
+            { id: 18, trait: 'A', dir: 1, type: 'likert5', stmt: "It's easy for me to see things from other people's perspectives, even when I disagree with them." },
+            { id: 19, trait: 'A', dir: 1, type: 'forced', scenario: 'A close friend asks for feedback on a business idea you think has serious flaws.', opts: [{ text: 'Give them an honest, balanced assessment — real feedback is more useful than comfort.', sc: 2 }, { text: 'Focus on the positives and soften the critique — they need encouragement right now.', sc: 5 }] },
+            { id: 20, trait: 'A', dir: -1, type: 'likert5', stmt: 'In conflicts, I can be firm and competitive — I have no trouble asserting my position strongly.' },
+            { id: 21, trait: 'A', dir: 1, type: 'likert5', stmt: 'I genuinely care about the wellbeing of people around me, including people I barely know.' },
+            { id: 22, trait: 'A', dir: 1, type: 'situational', scenario: 'A coworker takes significant credit for work that was largely yours.', opts: [{ text: 'Let it go — the conflict would cost more than the credit is worth.', sc: 5 }, { text: 'Address it privately with the coworker to understand what happened.', sc: 3 }, { text: 'Correct the record at the next appropriate opportunity, clearly and professionally.', sc: 1 }] },
+            { id: 23, trait: 'A', dir: 1, type: 'likert5', stmt: 'I go out of my way to keep peace and find middle-ground solutions in disagreements.' },
+            { id: 24, trait: 'N', dir: 1, type: 'likert5', stmt: 'I often worry about things that might go wrong, even when the risk is objectively small.' },
+            { id: 25, trait: 'N', dir: 1, type: 'forced', scenario: 'You realize you sent an email with a minor error to your entire team.', opts: [{ text: 'Feel a wave of anxiety — replay the moment, consider damage control, feel unsettled.', sc: 5 }, { text: 'Shrug it off quickly — minor errors are human, you move on without dwelling.', sc: 1 }] },
+            { id: 26, trait: 'N', dir: -1, type: 'likert5', stmt: 'I remain emotionally stable and composed under pressure — I rarely get rattled.' },
+            { id: 27, trait: 'N', dir: 1, type: 'likert5', stmt: 'My mood can shift noticeably depending on how my day is unfolding.' },
+            { id: 28, trait: 'N', dir: 1, type: 'situational', scenario: "You're waiting on important feedback — a job decision, key result, or proposal. It's delayed.", opts: [{ text: 'Find it hard to focus on other things — the uncertainty feels heavy and distracting.', sc: 5 }, { text: 'Feel mild impatience but generally stay productive.', sc: 3 }, { text: "Remain largely unbothered — it'll happen when it happens.", sc: 1 }] },
+            { id: 29, trait: 'N', dir: 1, type: 'likert5', stmt: "Criticism or negative feedback affects me emotionally, even when I know it's constructive." },
+        ];
+
+        const TC = { O: '#e8924a', C: '#4acea0', E: '#e85c7a', A: '#7b9cf5', N: '#b07cf5' };
+        const TD = { O: 'rgba(232,146,74,0.15)', C: 'rgba(74,206,160,0.15)', E: 'rgba(232,92,122,0.15)', A: 'rgba(123,156,245,0.15)', N: 'rgba(176,124,245,0.15)' };
+        const TN = { O: 'Openness', C: 'Conscientiousness', E: 'Extraversion', A: 'Agreeableness', N: 'Neuroticism' };
+        const LW = ['Strongly\nDisagree', 'Disagree', 'Neutral', 'Agree', 'Strongly\nAgree'];
+
+        let responses = {}, skips = 0, currentQ = 0, startTime, timerInt, elapsed = 0, confValue = 60;
+
+        // --- TELEMETRY TRACKING ---
+        let testSubmitted = false;
+        let timePerQuestion = {};
+        let questionStartTime = 0;
+        let testStartTimeISO = '';
+        let userAgentStr = navigator.userAgent;
+        let deviceType = /Mobile|Android|iP(ad|hone)/.test(userAgentStr) ? 'Mobile' : 'Desktop';
+        // ------------------------
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInt = setInterval(() => {
+                elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+                const s = String(elapsed % 60).padStart(2, '0');
+                document.getElementById('timerDisp').textContent = `${m}:${s}`;
+            }, 1000);
+        }
+        function stopTimer() { clearInterval(timerInt); }
+
+        function showSec(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            const el = document.getElementById(id);
+            el.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function startAssessment() {
+            testStartTimeISO = new Date().toISOString();
+            document.getElementById('progressWrap').style.display = 'block';
+            startTimer();
+            preRenderAll();
+            goTo(0);
+        }
+
+        function preRenderAll() {
+            const c = document.getElementById('qContainer');
+            c.innerHTML = '';
+            QS.forEach((q, i) => c.appendChild(buildQEl(q, i)));
+        }
+
+        function updateProgress(idx) {
+            document.getElementById('progFill').style.width = (idx / QS.length * 100) + '%';
+            document.getElementById('progText').textContent = `Question ${idx + 1} of ${QS.length}`;
+        }
+
+        function goTo(idx) {
+            currentQ = idx;
+            questionStartTime = Date.now();
+            updateProgress(idx);
+            showSec('q-' + idx);
+        }
+
+        function navBack(idx) { if (idx > 0) goTo(idx - 1); }
+
+        function navNext(idx) {
+            // Record time spent on this question
+            const timeSpent = Math.floor((Date.now() - questionStartTime) / 1000);
+            timePerQuestion[idx] = (timePerQuestion[idx] || 0) + timeSpent;
+
+            currentQ = idx + 1;
+            if (currentQ >= QS.length) {
+                stopTimer();
+                document.getElementById('progFill').style.width = '100%';
+                document.getElementById('progText').textContent = 'Assessment complete';
+                showSec('sec-conf');
+                return;
+            }
+            goTo(currentQ);
+        }
+
+        function skipQ(idx) { skips++; navNext(idx); }
+
+        function buildQEl(q, idx) {
+            const div = document.createElement('div');
+            div.className = 'section';
+            div.id = 'q-' + idx;
+            const color = TC[q.trait], dim = TD[q.trait], name = TN[q.trait];
+            let inner = `<div class="q-meta"><div class="trait-tag" style="background:${dim};color:${color}">${name}</div><div class="q-counter">Q${idx + 1} / ${QS.length}</div></div>`;
+
+            if (q.type === 'likert5') {
+                inner += `<h2 class="q-heading">Rate how accurately this describes you</h2>
+    <p class="q-sub">Respond based on your general pattern, not your best or worst day.</p>
+    <div class="likert-card">
+      <div class="likert-stmt">"${q.stmt}"</div>
+      <div class="likert-row" id="lr-${idx}">
+        ${[1, 2, 3, 4, 5].map(v => `<div class="lk-opt" onclick="pickLikert(${idx},${v},this)"><div class="lk-num">${v}</div><div class="lk-word">${LW[v - 1].replace('\n', '<br>')}</div></div>`).join('')}
+      </div>
+      <div class="likert-ends"><span>Does not describe me</span><span>Describes me very well</span></div>
+    </div>`;
+            } else {
+                const h = q.type === 'forced' ? 'Which response feels more like you?' : 'What would you most likely do?';
+                const sub = q.type === 'forced' ? 'Choose the one that best matches your natural instinct — not what you think you should do.' : 'Choose the response closest to your genuine reaction, not your ideal self.';
+                inner += `<h2 class="q-heading">${h}</h2><p class="q-sub">${sub}</p>
+    <div class="scenario-box">${q.scenario}</div>
+    <div class="fc-grid" id="fc-${idx}">
+      ${q.opts.map((o, i) => `<div class="fc-opt" onclick="pickFC(${idx},${o.sc},this)"><div class="fc-badge">${String.fromCharCode(65 + i)}</div><div class="fc-text">${o.text}</div></div>`).join('')}
+    </div>`;
+            }
+
+            inner += `<div class="btn-row">
+    <button class="btn btn-ghost" onclick="navBack(${idx})">${idx === 0 ? '' : ' ← Back'}</button>
+    <div style="display:flex;gap:14px;align-items:center">
+      <button class="skip-btn" onclick="skipQ(${idx})">Skip</button>
+      <button class="btn btn-primary" onclick="navNext(${idx})">${idx === QS.length - 1 ? 'Finish →' : 'Next →'}</button>
+    </div>
+  </div>`;
+
+            div.innerHTML = inner;
+            return div;
+        }
+
+        function pickLikert(idx, val, el) {
+            responses[idx] = val;
+            document.querySelectorAll(`#lr-${idx} .lk-opt`).forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        function pickFC(idx, score, el) {
+            responses[idx] = score;
+            el.closest('.fc-grid').querySelectorAll('.fc-opt').forEach(o => o.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        const CLABELS = [[0, 15, "Completely inaccurate — doesn't reflect me at all"], [16, 35, "Mostly inaccurate — only a few things ring true"], [36, 50, "Partially accurate — some parts fit, many don't"], [51, 70, "Moderately accurate — captures several real tendencies"], [71, 85, "Largely accurate — feels genuinely like me"], [86, 100, "Very accurate — this profile reflects me closely"]];
+        function updateConfLabel(v) {
+            confValue = parseInt(v);
+            const l = CLABELS.find(([lo, hi]) => v >= lo && v <= hi);
+            document.getElementById('confValDisp').textContent = `"${l ? l[2] : ''}"`;
+        }
+
+        // ═══════════════════════════════════════════════
+        // SCORING
+        // ═══════════════════════════════════════════════
+        function computeScores() {
+            const sums = { O: 0, C: 0, E: 0, A: 0, N: 0 }, counts = { O: 0, C: 0, E: 0, A: 0, N: 0 };
+            QS.forEach(q => {
+                if (responses[q.id] !== undefined) {
+                    sums[q.trait] += q.dir === 1 ? responses[q.id] : (6 - responses[q.id]);
+                    counts[q.trait]++;
+                }
+            });
+            const p = {};
+            ['O', 'C', 'E', 'A', 'N'].forEach(t => { p[t] = counts[t] > 0 ? Math.round((sums[t] / (counts[t] * 5)) * 100) : 50; });
+            return p;
+        }
+
+        function lv(pct) { return pct >= 65 ? 'high' : pct >= 40 ? 'mid' : 'low'; }
+
+        // ═══════════════════════════════════════════════
+        // QUALITATIVE PROFILES
+        // ═══════════════════════════════════════════════
+
+        function getNature(sc) {
+            const O = lv(sc.O), C = lv(sc.C), E = lv(sc.E), A = lv(sc.A), N = lv(sc.N);
+            if (E === 'high' && A === 'high' && O === 'high') return { label: 'The Visionary Connector', body: "You are naturally warm, socially energetic, and intellectually curious. People are drawn to your enthusiasm and your ability to make complex ideas feel accessible. You thrive where creativity meets collaboration — generating ideas and rallying others around them." };
+            if (C === 'high' && N === 'low' && E !== 'high') return { label: 'The Steady Achiever', body: "Disciplined, calm, and reliable — you build things that last. You don't need the spotlight to perform at your best. Your power comes from consistency, clear thinking, and an unwavering commitment to following through. People trust you implicitly." };
+            if (O === 'high' && C === 'low') return { label: 'The Creative Explorer', body: "Your mind is rarely still — it wanders into ideas, possibilities, and 'what ifs' with genuine delight. Structure sometimes chafes against your creative flow, and you do your best thinking when you're free to follow curiosity without a rigid plan." };
+            if (A === 'high' && N === 'high') return { label: 'The Empathic Idealist', body: "Deeply caring and emotionally attuned, you feel the world with intensity. You prioritize relationships and harmony, sometimes at personal cost. Your empathy is a profound gift — and learning to protect your own emotional bandwidth is your ongoing work." };
+            if (E === 'low' && C === 'high') return { label: 'The Thoughtful Strategist', body: "Quiet on the outside, rich on the inside. You process deeply before speaking, plan before acting, and prefer meaning over noise. You're most effective as a trusted individual contributor or behind-the-scenes force that drives real outcomes." };
+            if (N === 'high' && C === 'low') return { label: 'The Sensitive Seeker', body: "You experience life with full emotional intensity. Things matter to you — perhaps more than to others — and that sensitivity brings both richness and struggle. Learning to channel your emotional reactivity into creative or purposeful outlets is your superpower in development." };
+            if (A === 'low' && C === 'high' && E === 'high') return { label: 'The Decisive Driver', body: "Results-oriented, direct, and confident — you set the pace. You're comfortable taking charge, making tough calls, and pushing through resistance. Social harmony is a secondary concern when the goal is on the line." };
+            return { label: 'The Balanced Realist', body: "Your profile doesn't skew to extremes — you're genuinely adaptable. You can be creative or structured depending on context, social or reflective depending on the situation. This flexibility is real strength, though it can sometimes make self-definition feel elusive." };
+        }
+
+        function getThinkingPattern(sc) {
+            const O = lv(sc.O), C = lv(sc.C);
+            if (O === 'high' && C === 'high') return { label: 'Structured Innovator', body: "You think expansively but execute tightly. You generate a wide field of ideas and then apply rigorous prioritization to find what's worth pursuing. Your thinking is both visionary and disciplined — a rare combination that makes you effective across creative and operational contexts." };
+            if (O === 'high') return { label: 'Divergent Thinker', body: "Your mind naturally diverges — generating multiple angles, associations, and possibilities before converging on a direction. You think in analogies, metaphors, and big-picture frameworks. Linear thinking can feel constraining; you prefer to let ideas breathe before committing." };
+            if (C === 'high') return { label: 'Convergent Executor', body: "You're a natural systems thinker who excels at turning ambiguity into action. You prefer clear frameworks, sequential logic, and defined outcomes. You identify the most direct route and follow it with precision." };
+            if (sc.A >= 55 && sc.N >= 55) return { label: 'Relational Thinker', body: "You think through people and relationships. Before deciding, you often ask 'how will this affect others?' Your reasoning is shaped by empathy, context, and interpersonal consequence — making you highly attuned to social dynamics." };
+            return { label: 'Pragmatic Analyst', body: "You think clearly and practically. You tend to gather enough information to make a confident decision, avoid overthinking, and execute without excessive second-guessing. You're grounded, realistic, and resistant to being swept up in abstract theory without concrete application." };
+        }
+
+        function getEQ(sc) {
+            const eq = Math.round((sc.A * 0.35) + ((100 - sc.N) * 0.30) + (sc.O * 0.20) + (sc.C * 0.15));
+            if (eq >= 70) return { badge: 'badge-green', badgeText: 'High EQ', icon: '💚', bg: 'rgba(74,206,160,0.12)', headline: 'Emotionally Intelligent & Attuned', body: "You read people well, regulate your own emotions effectively, and navigate interpersonal complexity with grace. You're likely the person others come to during difficult moments — not because you have all the answers, but because you make people feel genuinely understood.", points: ['Strong empathy — you sense emotional undercurrents in groups and one-on-ones', 'You manage your reactions under pressure rather than being hijacked by them', 'You build trust quickly and maintain relationships over time'] };
+            if (eq >= 50) return { badge: 'badge-amber', badgeText: 'Developing EQ', icon: '🟡', bg: 'rgba(232,146,74,0.1)', headline: 'Emotionally Aware with Room to Grow', body: "You have meaningful emotional awareness — you generally understand how you feel and care about others. But in high-pressure situations or complex interpersonal dynamics, your emotional regulation can falter. Specific areas like managing frustration or reading subtle social cues benefit from intentional development.", points: ['Self-awareness is present; self-regulation may be inconsistent under stress', 'Empathy is situational — stronger with people you know well', 'You benefit from structured reflection after emotionally intense experiences'] };
+            return { badge: 'badge-red', badgeText: 'EQ — Growth Area', icon: '🔴', bg: 'rgba(232,92,122,0.1)', headline: 'Emotional Processing Needs Attention', body: "Your profile suggests that emotional information — your own and others' — may not always be processed in ways that serve your relationships and performance. EQ is highly developable with practice. Becoming more deliberate about noticing, naming, and responding to emotions is a high-leverage area for you.", points: ['Emotional reactions may sometimes override considered judgment', 'Reading others\' unspoken emotional states may require more conscious effort', 'Consider regular reflection practices or working with a coach or therapist'] };
+        }
+
+        function getLeadership(sc) {
+            const ls = Math.round((sc.E * 0.35) + (sc.C * 0.30) + (sc.O * 0.20) + ((100 - sc.N) * 0.15));
+            if (ls >= 68) return { badge: 'badge-blue', badgeText: 'Strong Leader', icon: '🌟', bg: 'rgba(123,156,245,0.1)', headline: 'Natural Leadership Orientation', body: "You combine the three core ingredients of effective leadership: energy that draws people in, discipline that converts vision into results, and intellectual openness that keeps you from becoming rigid. You likely step into authority naturally and are comfortable making calls in ambiguous situations.", points: ['You project confidence without requiring constant validation', 'You hold both the vision and the operational detail simultaneously', 'Most effective in roles with real ownership and decision-making authority'] };
+            if (ls >= 48) return { badge: 'badge-amber', badgeText: 'Emerging Leader', icon: '🔶', bg: 'rgba(232,146,74,0.1)', headline: 'Leadership Capacity in Development', body: "You have genuine leadership ingredients — you show up reliably, care about outcomes, and can influence people when motivated. But either your energy for front-facing leadership, your comfort with ambiguity, or your consistency under pressure still has room to grow.", points: ['Situational leadership comes more naturally than positional authority', 'You may thrive in collaborative or co-leadership structures', 'Identifying your specific leadership edges will accelerate growth'] };
+            return { badge: 'badge-green', badgeText: 'Specialist Strength', icon: '⬜', bg: 'rgba(112,112,160,0.1)', headline: 'Individual Contributor Excellence', body: "Your profile suggests you're likely to add the most value as a specialist, craftsperson, or deep contributor rather than a formal leader. This isn't a limitation — many of the most impactful people in any organization are exactly this. The question is: are you in a role that rewards depth over authority?", points: ['You likely produce outstanding work within clearly defined scope', 'Leading teams or managing people may feel draining rather than energizing', 'Your influence is best exercised through expertise rather than authority'] };
+        }
+
+        function getBurnout(sc, cr, elapsed) {
+            const hN = sc.N >= 60, lC = sc.C < 45, hA = sc.A >= 65;
+            if (hN && lC && hA) return { badge: 'badge-red', badgeText: 'Elevated Risk', icon: '🔥', bg: 'rgba(232,92,122,0.1)', headline: 'Meaningful Burnout Vulnerability', body: "Three factors converge to elevate your burnout risk: high emotional reactivity, high people-pleasing tendency, and lower self-regulation. You feel things deeply, often absorb others' stress, and may struggle to say no — while also finding it hard to maintain recovery habits consistently.", points: ['You may over-commit because disappointing others feels worse than depleting yourself', 'Stress accumulates without adequate structured release or recovery', 'Strong boundaries and recovery rituals are not optional for you — they\'re essential'] };
+            if (hN && lC) return { badge: 'badge-amber', badgeText: 'Moderate Risk', icon: '⚠️', bg: 'rgba(232,146,74,0.1)', headline: 'Stress-Prone Without Strong Structure', body: "High emotional reactivity combined with lower conscientiousness means you feel stress acutely but may not have robust systems to prevent or recover from it. Without external structure or deliberate self-management habits, you can drift into exhaustion.", points: ['Even minimal routines (sleep, movement, downtime) dramatically reduce your risk', 'Identify your earliest warning signs of burnout — catch it early', 'Structured work environments with clear scope tend to protect you'] };
+            if (hN) return { badge: 'badge-amber', badgeText: 'Watch This', icon: '🟡', bg: 'rgba(232,146,74,0.1)', headline: 'Emotionally Sensitive — Monitor Carefully', body: "Your higher emotional reactivity means you may process stress more intensely than others. Your conscientiousness provides some buffer, but your inner world can get loud under sustained pressure. Knowing your triggers and having proactive recovery strategies matters.", points: ['High-ambiguity or high-conflict environments hit harder for you than for others', 'Build transition rituals between work and personal time', 'Regular self-check-ins prevent small stress from compounding quietly'] };
+            return { badge: 'badge-green', badgeText: 'Low Risk', icon: '✅', bg: 'rgba(74,206,160,0.1)', headline: 'Emotionally Resilient', body: "Your emotional stability and self-regulatory habits give you strong natural protection against burnout. You likely recover quickly from setbacks and maintain equanimity under sustained pressure — one of your most valuable traits in high-stakes or long-duration projects.", points: ['You bounce back from stress faster than most', 'Effective in high-pressure roles without chronic performance degradation', 'Monitor for numbness or detachment — resilient people sometimes overlook early signs'] };
+        }
+
+        function getImpulsivity(sc, elapsed, answered) {
+            const lC = sc.C < 42, hN = sc.N >= 62, fast = elapsed < 200 && answered > 20, hO = sc.O >= 65;
+            if (lC && hN && fast) return { badge: 'badge-red', badgeText: 'High Impulsivity', icon: '⚡', bg: 'rgba(232,92,122,0.1)', headline: 'Act First, Think Later', body: "A combination of low self-regulation, high emotional reactivity, and rapid response time suggests a tendency to act before fully thinking things through. Decisions made in this mode can be energetically driven but may carry unintended consequences you regret later.", points: ['Pause deliberately before high-stakes decisions — even 60 seconds matters', 'Emotional triggers can bypass rational judgment quickly for you', 'Build in an "overnight rule" for major commitments or emotional reactions'] };
+            if (lC && hO) return { badge: 'badge-amber', badgeText: 'Creatively Impulsive', icon: '🎨', bg: 'rgba(232,146,74,0.1)', headline: 'Spontaneous & Idea-Driven', body: "Your impulsivity isn't emotionally reactive — it's creative and exploratory. You follow ideas with enthusiasm, often jumping to the next interesting thing before finishing the last. This generates wonderful energy and innovation but can leave a trail of unfinished projects.", points: ['You\'re excellent at starts; completions require deliberate effort', 'Capture ideas without acting on them immediately — a "parking lot" system helps', 'Pairing with a more conscientious collaborator dramatically increases your output'] };
+            if (lC) return { badge: 'badge-amber', badgeText: 'Flexible, Sometimes Scattered', icon: '🌊', bg: 'rgba(232,146,74,0.1)', headline: 'Flow-Oriented Thinker', body: "You prefer to stay responsive rather than locked into a plan. This makes you adaptable and fast-moving — but it can mean priorities shift quickly and follow-through sometimes suffers. Structure tends to feel like a cage, even when it would actually free you.", points: ['Minimal structure (not zero) dramatically increases your effectiveness', 'Deadlines and accountability partners are your friends, not your enemies', 'Identify which commitments truly matter and protect them from drift'] };
+            return { badge: 'badge-green', badgeText: 'Considered & Deliberate', icon: '🧘', bg: 'rgba(74,206,160,0.1)', headline: 'Measured Before Acting', body: "You think before you act. Impulsive decisions are rare for you — you tend to consider consequences, weigh options, and commit with intention. In fast-moving environments this can occasionally slow you down, but your decisions tend to hold up over time.", points: ['You\'re unlikely to regret decisions made in the heat of the moment', 'Your measured pace may occasionally frustrate faster-moving collaborators', 'Be careful not to let deliberateness tip into analysis paralysis'] };
+        }
+
+        function getCalibration(sc, cv) {
+            const avg = Math.round(Object.values(sc).reduce((a, b) => a + b, 0) / 5);
+            const delta = cv - avg;
+            if (Math.abs(delta) <= 12) return { badge: 'badge-green', badgeText: 'Well Calibrated', icon: '🎯', bg: 'rgba(74,206,160,0.1)', headline: 'Your Self-Perception Aligns with Your Profile', body: "Your confidence in this assessment closely matches what your responses reveal. This suggests genuine self-awareness — you have a fairly accurate mental model of your own tendencies, strengths, and limitations. Well-calibrated self-knowledge is one of the highest-leverage traits for personal and professional growth.", points: ['Your blind spots are likely small and can be identified with targeted feedback', 'You probably accept accurate criticism without excessive defensiveness', 'Your stated values and actual behavior are likely fairly well aligned'] };
+            if (delta > 12) return { badge: 'badge-amber', badgeText: 'Over-Estimated', icon: '📈', bg: 'rgba(232,146,74,0.1)', headline: 'You Rated This More Accurate Than Your Responses Suggest', body: "You expressed high confidence that this assessment captured you well — but your response patterns suggest either some social desirability bias (choosing answers that reflect your ideal self rather than actual habits) or genuine blind spots about your tendencies. Neither is a character flaw — both are worth examining.", points: ['Ask trusted people how they would describe you — compare to your self-image', 'Notice moments where your actual behavior diverges from your stated values', 'The gap between ideal-self and actual-self is where the most growth lives'] };
+            return { badge: 'badge-purple', badgeText: 'Under-Estimated', icon: '📉', bg: 'rgba(176,124,245,0.1)', headline: 'You May Be Selling Yourself Short', body: "You expressed doubt that this assessment captured you accurately — but your response patterns paint a coherent, meaningful picture. This gap might reflect genuine humility, habitual self-doubt, or a sense that you're too complex to be boxed in. All are worth reflecting on.", points: ['Consider whether low confidence in self-assessment reflects broader self-doubt', 'You may hold yourself to a higher standard than you apply to others', 'Seek direct feedback from trusted others — you may be surprised how clearly they see your strengths'] };
+        }
+
+        function getPersistence(sc, cr, elapsed) {
+            const answered = Math.round(cr * QS.length);
+            if (cr >= 0.93) return { badge: 'badge-green', badgeText: 'High Persistence', icon: '🏔️', bg: 'rgba(74,206,160,0.1)', headline: 'You See Things Through', body: "You completed nearly every item in this assessment — a behavioral signal that maps to broader persistence in real life. You don't abandon things when they get uncomfortable or tedious. This follow-through is one of the strongest predictors of long-term achievement across domains.", points: ['You likely have a track record of finishing what you start', 'You tolerate ambiguity and discomfort long enough for results to emerge', 'You may also be prone to stubbornness — know when strategic quitting is the smarter move'] };
+            if (cr >= 0.70) return { badge: 'badge-amber', badgeText: 'Moderate Persistence', icon: '🚶', bg: 'rgba(232,146,74,0.1)', headline: 'Selective Follow-Through', body: "You completed most of the assessment but skipped some items — suggesting you persist on what feels relevant or manageable, but may withdraw when friction increases. This is a common and human pattern, but it can mean high-value but difficult goals sometimes get quietly abandoned.", points: ['Notice whether you disengage from hard items in work and life, not just assessments', 'Distinguish between strategic quitting (smart) and avoidance-quitting (costly)', 'Short-cycle commitment tools — weekly reviews, accountability partners — help bridge the gap'] };
+            return { badge: 'badge-red', badgeText: 'Low Persistence', icon: '🌊', bg: 'rgba(232,92,122,0.1)', headline: 'Engagement Drops Under Sustained Effort', body: "A significant portion of this assessment was skipped — suggesting that sustained engagement with challenging or repetitive tasks is a genuine difficulty. It's worth reflecting on whether this pattern shows up in other areas of life.", points: ['High-value goals often require sustained effort through uninspiring phases', 'Start with shorter commitment cycles and build up gradually', 'Identify what specifically triggers disengagement: boredom, difficulty, ambiguity, or relevance'] };
+        }
+
+        // ═══════════════════════════════════════════════
+        // TRAIT NARRATIVES (no scores shown)
+        // ═══════════════════════════════════════════════
+        function buildTraitNarratives(sc) {
+            const N = {
+                O: { high: { h: 'Intellectually Curious & Open', t: 'You actively seek out new ideas, perspectives, and experiences. Novelty energizes rather than threatens you. You\'re comfortable in ambiguity and likely flourish in environments that reward imagination and original thinking.' }, mid: { h: 'Selectively Open', t: 'You appreciate new ideas when they have practical grounding. You balance creative thinking with a pragmatic filter — not every new thing deserves attention, and you\'re reasonably good at telling the difference.' }, low: { h: 'Grounded & Conventional', t: 'You prefer what\'s proven, familiar, and concrete. This gives you stability and reliability, and you\'re often the person who keeps a team anchored when abstract thinking starts running wild.' } },
+                C: { high: { h: 'Self-Disciplined & Reliable', t: 'You follow through, plan ahead, and meet your commitments. Your work ethic is genuine and self-sustaining — you don\'t need external pressure to maintain standards. Others rely on you because you consistently deliver.' }, mid: { h: 'Dependably Flexible', t: 'You\'re organized enough to be trustworthy and flexible enough to adapt. You won\'t derail from chaos, but you won\'t be paralyzed by it either. Your reliability is contextual — strongest where you\'re most invested.' }, low: { h: 'Spontaneous & Adaptive', t: 'You prefer to stay responsive rather than locked into a plan. This makes you fast-moving and creative, but sometimes leaves a trail of half-finished projects. Structure, applied lightly, would dramatically amplify your output.' } },
+                E: { high: { h: 'Energized by People & Action', t: 'Social interaction fills your tank. You\'re expressive, outwardly confident, and drawn to high-energy environments. You process ideas by talking them through, and your enthusiasm is genuinely contagious.' }, mid: { h: 'Ambivert — Context-Adaptive', t: 'You\'re neither fully extraverted nor fully introverted. You can work a room when needed and retreat into solitude when depleted. You read the situation and calibrate accordingly — a genuine social flexibility.' }, low: { h: 'Introspective & Selective', t: 'You\'re energized by depth rather than breadth. Solitude is not isolation — it\'s fuel. You think before you speak, choose quality connections over quantity, and do your best work in calm, focused environments.' } },
+                A: { high: { h: 'Cooperative & Empathetic', t: 'You lead with warmth and a genuine concern for others. Relationships matter deeply to you, and you invest in keeping them healthy. The risk: you may sometimes absorb others\' needs at your own expense.' }, mid: { h: 'Balanced — Warm but Firm', t: 'You\'re cooperative and kind but not a pushover. You can disagree, hold your ground, and deliver hard truths when needed — all without burning bridges. This balance makes you effective across a wide range of relationships.' }, low: { h: 'Direct & Self-Determined', t: 'You prioritize honesty and results over social comfort. You\'re not unkind, but you don\'t soften things unnecessarily. Your directness can feel abrasive to some — and deeply refreshing to others who are tired of vagueness.' } },
+                N: { high: { h: 'Emotionally Sensitive & Reactive', t: 'You experience emotions with intensity and feel the world more acutely than many others. This brings depth, creativity, and empathy — but also vulnerability to stress, mood swings, and overthinking. Your emotional richness is a genuine gift in the right context.' }, mid: { h: 'Emotionally Aware & Mostly Stable', t: 'You have a real emotional inner life but generally manage it well. Under sustained pressure you may wobble, and negative feedback lands harder than you\'d like — but you recover with reasonable speed and self-awareness.' }, low: { h: 'Emotionally Resilient & Stable', t: 'You maintain composure where others get rattled. Criticism rolls off, setbacks don\'t linger, and you sustain performance under pressure. This is a significant professional advantage — and means others likely see you as a calming presence.' } },
+            };
+            return ['O', 'C', 'E', 'A', 'N'].map((t, i) => {
+                const n = N[t][lv(sc[t])];
+                return `<div class="trait-narrative" style="animation-delay:${0.05 * i}s">
+      <div class="tn-letter" style="background:${TD[t]};color:${TC[t]}">${t}</div>
+      <div class="tn-body">
+        <div class="tn-trait-name" style="color:${TC[t]}">${TN[t]}</div>
+        <div class="tn-headline">${n.h}</div>
+        <div class="tn-text">${n.t}</div>
+      </div>
+    </div>`;
+            }).join('');
+        }
+
+        function renderInsight(d, delay) {
+            const tierLabel = d.badge.replace('badge-', '');
+            return `<div class="insight-block" style="animation-delay:${delay}">
+    <div class="ib-header">
+      <div class="ib-icon" style="background:${d.bg}">${d.icon}</div>
+      <div class="ib-meta">
+        <div class="ib-label">${tierLabel.charAt(0).toUpperCase() + tierLabel.slice(1)} Signal</div>
+        <div class="ib-title">${d.headline}</div>
+      </div>
+      <div class="ib-badge ${d.badge}">${d.badgeText}</div>
+    </div>
+    <div class="ib-divider"></div>
+    <div class="ib-text">${d.body}</div>
+    <ul class="ib-points">${d.points.map(p => `<li>${p}</li>`).join('')}</ul>
+  </div>`;
+        }
+
+        function buildOverall(sc, nature, eq, leadership) {
+            const top = ['O', 'C', 'E', 'A', 'N'].sort((a, b) => sc[b] - sc[a]);
+            const t1 = TN[top[0]], t2 = TN[top[1]];
+            const article = /^[AEIOU]/i.test(nature.label) ? 'an' : 'a';
+            let eqLine = eq.badgeText === 'High EQ' ? 'Your emotional intelligence amplifies your interpersonal effectiveness, making you someone others naturally gravitate toward.' : eq.badgeText === 'Developing EQ' ? 'Your emotional awareness is present but uneven — high-pressure moments can surface gaps that calmer situations don\'t reveal.' : 'Emotional processing is an active growth frontier for you — one that will unlock significant gains when developed.';
+            let leadLine = leadership.badgeText === 'Strong Leader' ? 'Your leadership potential is clearly present and would thrive in roles with genuine ownership and scope.' : leadership.badgeText === 'Emerging Leader' ? 'Leadership capacity is building — the right environment and intentional development could accelerate it significantly.' : 'You\'re most likely to add exceptional value as a focused specialist rather than a formal leader.';
+            return `At your core, you are ${article} <em>${nature.label}</em> — a personality anchored by ${t1} and ${t2} as your most defining dimensions. ${eqLine} ${leadLine} The most meaningful growth available to you lives at the intersection of your strengths and your edges — knowing which battles to fight with your nature, and which to work with it.`;
+        }
+
+        // ═══════════════════════════════════════════════
+        // PREDICTIVE INDICES
+        // ═══════════════════════════════════════════════
+        function computePredictiveIndices(sc) {
+            return {
+                academicStability: Math.round((sc.C * 0.6) + ((100 - sc.N) * 0.4)),
+                burnoutRisk: Math.round((sc.N * 0.5) + ((100 - sc.C) * 0.3) + (sc.A * 0.2)),
+                leadershipIndex: Math.round((sc.E * 0.4) + (sc.C * 0.3) + (sc.O * 0.3)),
+                emotionalVolatility: Math.round((sc.N * 0.8) + ((100 - sc.A) * 0.2)),
+                persistenceQuotient: Math.round((sc.C * 0.5) + ((100 - sc.N) * 0.3) + (sc.O * 0.2)),
+                socialIntegration: Math.round((sc.E * 0.5) + (sc.A * 0.5)),
+                stressVulnerability: Math.round((sc.N * 0.6) + ((100 - sc.E) * 0.4))
+            };
+        }
+
+        // ═══════════════════════════════════════════════
+        // RENDER RESULTS
+        // ═══════════════════════════════════════════════
+        async function hashResponses(respMap) {
+            const encoder = new TextEncoder();
+            // Sort keys to ensure consistent hash regardless of order answered
+            const sortedResponses = {};
+            Object.keys(respMap).sort((a, b) => a - b).forEach(k => {
+                sortedResponses[k] = respMap[k];
+            });
+            const data = encoder.encode(JSON.stringify(sortedResponses));
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        async function showResults() {
+            confValue = parseInt(document.getElementById('confSlider').value);
+            const sc = computeScores();
+            const answered = Object.keys(responses).length;
+            const cr = answered / QS.length;
+            document.getElementById('resSubtitle').textContent = `${answered} of ${QS.length} questions answered · ${skips} skipped`;
+
+            const nature = getNature(sc);
+            const thinking = getThinkingPattern(sc);
+            const eq = getEQ(sc);
+            const leadership = getLeadership(sc);
+            const burnout = getBurnout(sc, cr, elapsed);
+            const impulsivity = getImpulsivity(sc, elapsed, answered);
+            const calibration = getCalibration(sc, confValue);
+            const persistence = getPersistence(sc, cr, elapsed);
+
+            const sorted = ['O', 'C', 'E', 'A', 'N'].sort((a, b) => sc[b] - sc[a]);
+            const pillsHTML = sorted.slice(0, 3).map(t => `<span class="pill pill-${t}">${TN[t]}</span>`).join('');
+
+            document.getElementById('resBody').innerHTML = `
+    <div class="identity-card">
+      <div class="id-eyebrow">Your Personality Archetype</div>
+      <div class="id-type">${nature.label}</div>
+      <div class="id-tagline">${thinking.label} · ${eq.badgeText}</div>
+      <div class="id-pills">${pillsHTML}</div>
+    </div>
+
+    <div class="overall-card">
+      <div class="oc-label">Profile Summary</div>
+      <div class="oc-text">${buildOverall(sc, nature, eq, leadership)}</div>
+    </div>
+
+    <div class="res-section" style="animation-delay:0.1s">
+      <div class="res-section-label">① Personality Foundation</div>
+      <div class="twin-grid">
+        <div class="profile-card">
+          <span class="pc-icon">🧬</span>
+          <div class="pc-label">Your Nature</div>
+          <div class="pc-title">${nature.label}</div>
+          <div class="pc-body">${nature.body}</div>
+        </div>
+        <div class="profile-card">
+          <span class="pc-icon">🧩</span>
+          <div class="pc-label">Thinking Pattern</div>
+          <div class="pc-title">${thinking.label}</div>
+          <div class="pc-body">${thinking.body}</div>
+        </div>
+      </div>
+      ${buildTraitNarratives(sc)}
+    </div>
+
+    <div class="res-section" style="animation-delay:0.2s">
+      <div class="res-section-label">② Emotional & Leadership Intelligence</div>
+      ${renderInsight(eq, '0.05s')}
+      ${renderInsight(leadership, '0.1s')}
+    </div>
+
+    <div class="res-section" style="animation-delay:0.3s">
+      <div class="res-section-label">③ Behavioral Risk Patterns</div>
+      ${renderInsight(burnout, '0.05s')}
+      ${renderInsight(impulsivity, '0.1s')}
+    </div>
+
+    <div class="res-section" style="animation-delay:0.4s">
+      <div class="res-section-label">④ Self-Awareness Signals</div>
+      ${renderInsight(calibration, '0.05s')}
+      ${renderInsight(persistence, '0.1s')}
+    </div>`;
+
+            showSec('sec-results');
+
+            if (testSubmitted) return; // Prevent double submission
+            testSubmitted = true;
+
+            // ═══ SESSION INTEGRATION: Save Full Attempt Payload ═══
+            try {
+                const SESSION_KEY = 'currentSession';
+                const STORAGE_KEY = 'ai_native_schools';
+                const sessionRaw = localStorage.getItem(SESSION_KEY);
+                const session = sessionRaw ? JSON.parse(sessionRaw) : null;
+
+                if (session && session.role === 'student' && session.schoolCode && session.studentId) {
+                    const schools = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                    const school = schools[session.schoolCode];
+                    if (school && school.classes) {
+                        for (const cls of school.classes) {
+                            const student = (cls.students || []).find(s => s.studentId === session.studentId);
+                            if (student) {
+
+                                // Initialize attempts object if not exists
+                                if (!student.attempts) student.attempts = {};
+
+                                const attemptNumber = Object.keys(student.attempts).length + 1;
+                                const attemptId = 'att_' + Date.now();
+
+                                const fullPayload = {
+                                    studentId: session.studentId,
+                                    schoolCode: session.schoolCode,
+                                    attemptId: attemptId,
+                                    attemptNumber: attemptNumber,
+                                    startedAt: testStartTimeISO,
+                                    completedAt: new Date().toISOString(),
+                                    durationSeconds: elapsed,
+                                    userAgent: userAgentStr,
+                                    deviceType: deviceType,
+                                    responses: responses,
+                                    timePerQuestion: timePerQuestion,
+                                    skippedQuestions: skips,
+                                    traitScores: sc,
+                                    computedInsights: {
+                                        nature: nature.label,
+                                        thinkingPattern: thinking.label,
+                                        EQ: eq.badgeText,
+                                        leadership: leadership.badgeText,
+                                        burnoutRisk: burnout.badgeText,
+                                        impulsivity: impulsivity.badgeText,
+                                        calibration: calibration.badgeText,
+                                        persistence: persistence.badgeText,
+                                        narrative: buildOverall(sc, nature, eq, leadership),
+                                        predictiveIndices: computePredictiveIndices(sc)
+                                    },
+                                    confidenceScore: confValue,
+                                    responsesHash: await hashResponses(responses),
+                                    serverComputedScores: sc,
+                                    isLocked: true
+                                };
+
+                                // Store full detailed attempt
+                                student.attempts[attemptId] = fullPayload;
+
+                                // Update legacy top-level flags so other parts of the system still work
+                                student.psychometricCompleted = true;
+                                student.psychometricReport = {
+                                    ...fullPayload.computedInsights,
+                                    completionTime: elapsed,
+                                    questionsAnswered: answered,
+                                    confidenceRating: confValue,
+                                    dateTaken: new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
+                                };
+
+                                // ═══ BEHAVIORAL RISK ENGINE (inline) ═══
+                                // Auto-compute behavioral risk & intervention plan
+                                // after each assessment if ≥ 2 attempts exist.
+                                try {
+                                    const allAtts = Object.values(student.attempts)
+                                        .filter(a => a.completedAt)
+                                        .sort((a, b) => new Date(a.startedAt) - new Date(b.startedAt));
+
+                                    if (allAtts.length >= 2) {
+                                        const recent = allAtts.slice(-3);
+                                        const _clamp = v => Math.max(0, Math.min(100, Math.round(v)));
+
+                                        // Component 1: Accuracy Weight
+                                        let accTotal = 0, accCount = 0;
+                                        for (const att of recent) {
+                                            if (!att.responses) continue;
+                                            const ks = Object.keys(att.responses).map(Number).sort((a, b) => a - b);
+                                            if (!ks.length) continue;
+                                            let s = 0, w = 0;
+                                            for (const k of ks) {
+                                                const v = Number(att.responses[k]);
+                                                if (isNaN(v)) continue;
+                                                const dw = 1 + (k / ks.length);
+                                                s += ((v - 1) / 4) * dw;
+                                                w += dw;
+                                            }
+                                            if (w > 0) { accTotal += s / w; accCount++; }
+                                        }
+                                        const accuracyW = accCount ? _clamp((accTotal / accCount) * 100) : 50;
+
+                                        // Component 2: Time Variance Weight
+                                        const allTimes = [];
+                                        for (const att of recent) {
+                                            if (!att.timePerQuestion) continue;
+                                            allTimes.push(...Object.values(att.timePerQuestion).map(Number).filter(t => t > 0));
+                                        }
+                                        let timeVarW = 50;
+                                        if (allTimes.length >= 3) {
+                                            const mean = allTimes.reduce((a, b) => a + b, 0) / allTimes.length;
+                                            const sd = Math.sqrt(allTimes.map(v => (v - mean) ** 2).reduce((a, b) => a + b, 0) / allTimes.length);
+                                            const cv = mean > 0 ? sd / mean : 0;
+                                            timeVarW = _clamp(100 * (1 - Math.min(cv / 1.5, 1)));
+                                        }
+
+                                        // Component 3: Drop-off Weight
+                                        const deltas = [];
+                                        for (const att of recent) {
+                                            if (!att.responses) continue;
+                                            const ks = Object.keys(att.responses).map(Number).sort((a, b) => a - b);
+                                            if (ks.length < 4) continue;
+                                            const q25 = Math.ceil(ks.length * 0.25);
+                                            const fq = ks.slice(0, q25).map(k => Number(att.responses[k])).filter(v => !isNaN(v));
+                                            const lq = ks.slice(-q25).map(k => Number(att.responses[k])).filter(v => !isNaN(v));
+                                            if (fq.length && lq.length) {
+                                                deltas.push((fq.reduce((a, b) => a + b, 0) / fq.length - lq.reduce((a, b) => a + b, 0) / lq.length) / 4);
+                                            }
+                                        }
+                                        const dropOffW = deltas.length ? _clamp(100 * (1 - Math.max(0, Math.min((deltas.reduce((a, b) => a + b, 0) / deltas.length) * 2, 1)))) : 50;
+
+                                        // Component 4: Confidence Gap Weight
+                                        const gaps = [];
+                                        for (const att of recent) {
+                                            if (att.confidenceScore == null || !att.responses) continue;
+                                            const vals = Object.values(att.responses).map(Number).filter(v => !isNaN(v));
+                                            if (!vals.length) continue;
+                                            const actualAcc = ((vals.reduce((a, b) => a + b, 0) / vals.length) - 1) / 4 * 100;
+                                            gaps.push(Math.abs(att.confidenceScore - actualAcc));
+                                        }
+                                        const confGapW = gaps.length ? _clamp(100 * (1 - Math.min((gaps.reduce((a, b) => a + b, 0) / gaps.length) / 60, 1))) : 50;
+
+                                        // Composite
+                                        const riskScore = _clamp(accuracyW * 0.4 + timeVarW * 0.2 + dropOffW * 0.2 + confGapW * 0.2);
+                                        const riskClass = riskScore <= 40 ? 'High Risk' : riskScore <= 70 ? 'Moderate' : 'Stable';
+
+                                        student.behavioralRisk = {
+                                            score: riskScore,
+                                            classification: riskClass,
+                                            components: { accuracy: accuracyW, timeVariance: timeVarW, dropOff: dropOffW, confidenceGap: confGapW },
+                                            lastUpdated: new Date().toISOString()
+                                        };
+
+                                        // Intervention Plan
+                                        const loops = [];
+                                        if (accuracyW < 50) loops.push({ type: 'Concept Reinforcement', description: 'Focused 5-question loop targeting weak concept areas.', difficulty: 'Adaptive', durationMinutes: 10 });
+                                        if (timeVarW < 40) loops.push({ type: 'Pacing Stabilization', description: 'Structured timing drill with progressive intervals.', difficulty: 'Moderate', durationMinutes: 8 });
+                                        if (dropOffW < 40) loops.push({ type: 'Attention Endurance', description: 'Multi-stage problem sequence to build sustained focus.', difficulty: 'Progressive', durationMinutes: 12 });
+                                        if (confGapW < 40) loops.push({ type: 'Calibration Training', description: 'Confidence prediction quiz to improve self-assessment.', difficulty: 'Moderate', durationMinutes: 7 });
+
+                                        student.interventionPlan = { recommendedLoops: loops, lastGenerated: new Date().toISOString() };
+                                    }
+                                } catch (riskErr) {
+                                    console.warn('Behavioral risk computation skipped:', riskErr);
+                                }
+                                // ═══ END BEHAVIORAL RISK ENGINE ═══
+
+                                // ═══ COGNITIVE INTELLIGENCE ENGINES ═══
+                                // Run all engines sequentially — each safely
+                                // extends the student object without overwriting.
+                                try {
+                                    // 1. Intervention Effectiveness (depends on behavioralRisk)
+                                    if (typeof computeInterventionEffectiveness === 'function') {
+                                        computeInterventionEffectiveness(student);
+                                    }
+
+                                    // 2. Cognitive Growth Index (depends on interventionAnalytics)
+                                    if (typeof computeCognitiveGrowthIndex === 'function') {
+                                        computeCognitiveGrowthIndex(student);
+                                    }
+
+                                    // 3. Resilience Index
+                                    if (typeof computeResilienceIndex === 'function') {
+                                        computeResilienceIndex(student);
+                                    }
+
+                                    // 4. Strategy Profile
+                                    if (typeof classifyStrategyProfile === 'function') {
+                                        classifyStrategyProfile(student);
+                                    }
+
+                                    // 5. Skill-Academic Correlation
+                                    if (typeof computeSkillAcademicCorrelation === 'function') {
+                                        computeSkillAcademicCorrelation(student);
+                                    }
+
+                                    // 6. Dropout Prediction (depends on behavioralRisk, interventionAnalytics)
+                                    if (typeof predictDropoutRisk === 'function') {
+                                        predictDropoutRisk(student);
+                                    }
+
+                                    // 7. Escalation Alerts (depends on behavioralRisk, longitudinal)
+                                    if (typeof evaluateEscalation === 'function') {
+                                        evaluateEscalation(student);
+                                    }
+
+                                    // 8. Narrative Generation (depends on all above)
+                                    if (typeof generateNarratives === 'function') {
+                                        generateNarratives(student);
+                                    }
+
+                                    // 9. Audit Logging
+                                    if (typeof logAuditEvent === 'function') {
+                                        logAuditEvent('student', 'Assessment completed', {
+                                            studentId: session.studentId,
+                                            attemptNumber: attemptNumber,
+                                            cgi: student.longitudinal ? student.longitudinal.yearlyIndex : null,
+                                        });
+                                    }
+                                } catch (engineErr) {
+                                    console.warn('Cognitive intelligence engines (partial):', engineErr);
+                                }
+                                // ═══ END COGNITIVE INTELLIGENCE ENGINES ═══
+
+                                localStorage.setItem(STORAGE_KEY, JSON.stringify(schools));
+
+                                // Update session flag
+                                session.psychometricCompleted = true;
+                                localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+                                break;
+                            }
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Failed to save report:', err);
+            }
+        }
+
+        function resetAll() {
+            // Disallow retake directly from test to prevent manipulation — go to dashboard instead
+            window.location.href = 'student/dashboard.html';
+        }
+
+        // --- GLOBAL THEME TOGGLE FOR TEST PAGE ---
+        const themeBtn = document.getElementById('theme-toggle-test');
+
+        // Define light mode palette overrides inline
+        const lightThemeCSS = `
+            :root[data-theme="light"] {
+                --bg: #f8f9fa;
+                --surface: #ffffff;
+                --card: #ffffff;
+                --border: #e2e8f0;
+                --border-light: #cbd5e1;
+                --text: #1e293b;
+                --muted: #64748b;
+                --soft: #f1f5f9;
+                --O-dim: rgba(232, 146, 74, 0.18);
+                --C-dim: rgba(74, 206, 160, 0.18);
+                --E-dim: rgba(232, 92, 122, 0.18);
+                --A-dim: rgba(123, 156, 245, 0.18);
+                --N-dim: rgba(176, 124, 245, 0.18);
+            }
+            :root[data-theme="light"] body::before {
+                background:
+                    radial-gradient(ellipse 50% 35% at 15% 20%, rgba(123, 156, 245, 0.15) 0%, transparent 70%),
+                    radial-gradient(ellipse 40% 40% at 85% 75%, rgba(176, 124, 245, 0.15) 0%, transparent 70%);
+            }
+            :root[data-theme="light"] body::after { opacity: 0.15; }
+        `;
+        const styleEl = document.createElement('style');
+        styleEl.textContent = lightThemeCSS;
+        document.head.appendChild(styleEl);
+
+        const savedTheme = localStorage.getItem('ai_native_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const target = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', target);
+            localStorage.setItem('ai_native_theme', target);
+            updateThemeIcon(target);
+        });
+
+        function updateThemeIcon(theme) {
+            themeBtn.innerHTML = theme === 'dark'
+                ? '<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
+                : '<svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
+        }
+    </script>
+</body>
+
+</html>

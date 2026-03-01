@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Test Helper</title>
+</head>
+
+<body>
+    <h1>Test Helper — sets admin session and redirects to SCIR report</h1>
+    <script>
+        localStorage.setItem('currentSession', JSON.stringify({ loggedIn: true, role: 'admin', schoolCode: 'AINSC1', schoolName: 'AI Native Demo School', adminName: 'Demo Admin', loginTime: Date.now() }));
+        // Redirect to report
+        window.location.href = 'admin/reports/student-report.html?studentId=1001&attemptId=att_1';
+    </script>
+</body>
+
+</html>

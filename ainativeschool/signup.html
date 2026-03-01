@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Register your school on AI Native Schools — Cognitive Intelligence Platform" />
+    <title>Register School — AI Native Schools</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <div class="login-page">
+        <!-- LEFT PANEL -->
+        <div class="login-left">
+            <div>
+                <div class="login-brand">
+                    <div class="login-brand-icon">☆</div>
+                    <span>AI Native Schools</span>
+                </div>
+                <div class="login-brand-sub">For Educators</div>
+            </div>
+
+            <div class="login-hero">
+                <div class="login-hero-label">School Registration</div>
+                <h1>Empower your<br>school with <em>AI.</em></h1>
+                <p>Register your institution and unlock AI-powered psychometric assessments, cognitive profiling, and
+                    personalized learning insights for every student.</p>
+            </div>
+
+            <div class="login-stats">
+                <div class="login-stat-item">
+                    <div class="login-stat-value">5 min</div>
+                    <div class="login-stat-label">Setup Time</div>
+                </div>
+                <div class="login-stat-item">
+                    <div class="login-stat-value">Free</div>
+                    <div class="login-stat-label">For Pilot</div>
+                </div>
+                <div class="login-stat-item">
+                    <div class="login-stat-value">∞</div>
+                    <div class="login-stat-label">Students</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="login-right">
+            <div class="login-card-wrap">
+                <!-- Registration Form -->
+                <div id="signup-form-view">
+                    <div class="login-card-header">
+                        <div class="login-card-eyebrow">Create Account</div>
+                        <h2>Register School</h2>
+                        <p>Set up your school's cognitive intelligence hub.</p>
+                    </div>
+
+                    <form id="signup-form" autocomplete="off" novalidate>
+                        <div class="form-group">
+                            <input type="text" id="schoolName" class="input-field" placeholder=" " autocomplete="off" />
+                            <label for="schoolName" class="floating-label">School Name</label>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="schoolCode" class="input-field" placeholder=" " readonly
+                                style="cursor:default;background:var(--soft)" />
+                            <label for="schoolCode" class="floating-label"
+                                style="top:6px;font-size:11px;font-weight:600;color:var(--accent);background:var(--surface);letter-spacing:0.5px">School
+                                Code (auto-generated)</label>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="text" id="adminName" class="input-field" placeholder=" " autocomplete="off" />
+                            <label for="adminName" class="floating-label">Admin Full Name</label>
+                        </div>
+
+                        <div class="form-group">
+                            <input type="email" id="adminEmail" class="input-field" placeholder=" "
+                                autocomplete="off" />
+                            <label for="adminEmail" class="floating-label">Admin Email</label>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="password-wrapper">
+                                <input type="password" id="adminPassword" class="input-field" placeholder=" " />
+                                <button type="button" class="password-toggle" id="toggle-pw"
+                                    aria-label="Toggle"></button>
+                            </div>
+                            <label for="adminPassword" class="floating-label">Create Password</label>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="password-wrapper">
+                                <input type="password" id="adminConfirmPassword" class="input-field" placeholder=" " />
+                                <button type="button" class="password-toggle" id="toggle-cpw"
+                                    aria-label="Toggle"></button>
+                            </div>
+                            <label for="adminConfirmPassword" class="floating-label">Confirm Password</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="signup-btn">
+                            <span id="signup-btn-text">Create School Account</span>
+                        </button>
+                    </form>
+
+                    <div class="login-footer">
+                        <div class="login-footer-text" style="justify-content:center;gap:6px;margin-top:20px">
+                            <span>Already registered?</span>
+                            <a href="index.html">Sign in</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div id="signup-success" style="display:none">
+                    <div class="success-state">
+                        <div class="checkmark-circle">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                stroke-linecap="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </div>
+                        <h2>School Registered!</h2>
+                        <p style="color:var(--muted);margin-top:8px">Your school code is <strong
+                                id="success-code"></strong>. Share it with your students.</p>
+                        <button class="btn btn-primary" style="margin-top:24px" id="go-dashboard-btn">Go to
+                            Dashboard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button id="theme-toggle" class="btn-icon" style="position:fixed;top:16px;right:16px;z-index:100"></button>
+
+    <script type="module">
+        import { seedDemoData } from './js/storage.js';
+        import { generateSchoolCode, registerSchool, validateEmail } from './js/auth.js';
+        import { requireGuest } from './js/session.js';
+        import { showToast } from './js/toast.js';
+        import { setupPasswordToggle, showValidation, clearValidation, initRipples, initThemeToggle } from './js/ui.js';
+
+        seedDemoData();
+        if (!requireGuest()) throw new Error('Redirecting...');
+        initThemeToggle();
+        initRipples();
+
+        setupPasswordToggle(document.getElementById('adminPassword'), document.getElementById('toggle-pw'));
+        setupPasswordToggle(document.getElementById('adminConfirmPassword'), document.getElementById('toggle-cpw'));
+
+        // Auto-generate school code
+        const schoolNameInput = document.getElementById('schoolName');
+        const schoolCodeInput = document.getElementById('schoolCode');
+
+        schoolNameInput.addEventListener('input', () => {
+            const name = schoolNameInput.value.trim();
+            if (name.length >= 3) {
+                schoolCodeInput.value = generateSchoolCode(name);
+            } else {
+                schoolCodeInput.value = '';
+            }
+        });
+
+        // Submit
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const schoolName = schoolNameInput.value.trim();
+            const schoolCode = schoolCodeInput.value.trim();
+            const adminName = document.getElementById('adminName').value.trim();
+            const adminEmail = document.getElementById('adminEmail').value.trim();
+            const adminPassword = document.getElementById('adminPassword').value;
+            const adminConfirmPassword = document.getElementById('adminConfirmPassword').value;
+
+            let hasError = false;
+            if (!schoolName || schoolName.length < 3) { showValidation(schoolNameInput, false, 'Min 3 characters'); hasError = true; }
+            else { clearValidation(schoolNameInput); }
+
+            if (!adminName) { showValidation(document.getElementById('adminName'), false, 'Required'); hasError = true; }
+            else { clearValidation(document.getElementById('adminName')); }
+
+            const emailCheck = validateEmail(adminEmail);
+            if (!emailCheck.valid) { showValidation(document.getElementById('adminEmail'), false, emailCheck.message); hasError = true; }
+            else { clearValidation(document.getElementById('adminEmail')); }
+
+            const pwValid = adminPassword && adminPassword.length >= 6;
+            if (!pwValid) { showValidation(document.getElementById('adminPassword'), false, 'Minimum 6 characters required'); hasError = true; }
+            else { clearValidation(document.getElementById('adminPassword')); }
+
+            if (adminPassword !== adminConfirmPassword) { showValidation(document.getElementById('adminConfirmPassword'), false, 'Passwords do not match'); hasError = true; }
+            else if (pwValid) { clearValidation(document.getElementById('adminConfirmPassword')); }
+
+            if (hasError) return;
+
+            const btn = document.getElementById('signup-btn');
+            const btnText = document.getElementById('signup-btn-text');
+            btn.disabled = true;
+            btnText.innerHTML = '<div class="spinner"></div>';
+
+            await new Promise(r => setTimeout(r, 1000));
+
+            const result = await registerSchool({ schoolName, schoolCode, adminName, adminEmail, adminPassword });
+
+            if (result.success) {
+                document.getElementById('signup-form-view').style.display = 'none';
+                document.getElementById('signup-success').style.display = 'block';
+                document.getElementById('success-code').textContent = schoolCode;
+
+                document.getElementById('go-dashboard-btn').addEventListener('click', () => {
+                    window.location.href = 'admin/dashboard.html';
+                });
+            } else {
+                showToast('error', result.message);
+                btn.disabled = false;
+                btnText.textContent = 'Create School Account';
+            }
+        });
+    </script>
+</body>
+
+</html>

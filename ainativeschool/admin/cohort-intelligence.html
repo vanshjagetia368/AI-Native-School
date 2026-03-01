@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cohort Intelligence — AI Native Schools</title>
+    <!-- Use the system-wide styles -->
+    <link rel="stylesheet" href="../styles.css" />
+    <style>
+        .warning-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 4px solid rgba(232, 92, 122, 1);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform .2s, box-shadow .2s
+        }
+
+        .warning-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .05)
+        }
+
+        .warning-card.severity-critical {
+            border-left-color: #e85c7a
+        }
+
+        .warning-card.severity-high {
+            border-left-color: #e8924a
+        }
+
+        .warning-card.severity-medium {
+            border-left-color: #7b9cf5
+        }
+
+        .warning-card.severity-low {
+            border-left-color: #4acea0
+        }
+
+        .w-info h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 4px
+        }
+
+        .w-info p {
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .w-flag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(232, 92, 122, .1);
+            color: rgba(232, 92, 122, 1)
+        }
+
+        .w-flag.crit {
+            background: rgba(232, 92, 122, .1);
+            color: #e85c7a
+        }
+
+        .w-flag.high {
+            background: rgba(232, 146, 74, .1);
+            color: #e8924a
+        }
+
+        .w-flag.med {
+            background: rgba(123, 156, 245, .1);
+            color: #7b9cf5
+        }
+
+        .intervention-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px
+        }
+
+        .intervention-track {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px
+        }
+
+        .it-header {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .it-list {
+            list-style: none;
+            padding: 0;
+            margin: 0
+        }
+
+        .it-list li {
+            padding: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .it-list li a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600
+        }
+
+        .it-list li a:hover {
+            text-decoration: underline
+        }
+
+        .ci-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 32px;
+            animation: fadeUp .5s ease both
+        }
+
+        .ci-panel h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .ci-canvas-wrap {
+            width: 100%;
+            min-height: 220px;
+            position: relative
+        }
+
+        .ci-canvas-wrap canvas {
+            width: 100%
+        }
+
+        .ci-metrics-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 16px
+        }
+
+        .ci-metric {
+            flex: 1;
+            min-width: 120px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            text-align: center
+        }
+
+        .ci-metric-val {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1
+        }
+
+        .ci-metric-lbl {
+            font-size: .75rem;
+            color: var(--muted);
+            margin-top: 6px;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .ci-severity-filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px
+        }
+
+        .ci-sev-btn {
+            font-family: 'Outfit', sans-serif;
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--soft);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600
+        }
+
+        .ci-sev-btn.active {
+            background: var(--accent);
+            color: #fff;
+            border-color: var(--accent)
+        }
+    </style>
+</head>
+
+<body>
+    <div class="admin-layout" id="admin-layout">
+        <aside class="sidebar" id="sidebar" style="position:relative">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon">☆</div>
+                <div class="sidebar-brand-text">
+                    <div class="sidebar-brand-name">AI Native</div>
+                    <div class="sidebar-brand-sub">Admin Panel</div>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle sidebar">◂</button>
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+                <a href="dashboard.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <rect x="3" y="3" width="7" height="7" rx="1" />
+                        <rect x="14" y="3" width="7" height="7" rx="1" />
+                        <rect x="3" y="14" width="7" height="7" rx="1" />
+                        <rect x="14" y="14" width="7" height="7" rx="1" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="classes.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                    </svg>
+                    <span>Classes</span>
+                </a>
+                <a href="students.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <span>Students</span>
+                </a>
+                <a href="cohort-intelligence.html" class="nav-item active">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 20V10" />
+                        <path d="M18 20V4" />
+                        <path d="M6 20v-4" />
+                    </svg>
+                    <span>Cohort Analytics</span>
+                </a>
+                <div class="nav-section-label">Tools</div>
+                <a href="import.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="17 8 12 3 7 8" />
+                        <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    <span>Import Excel</span>
+                </a>
+                <a href="reports.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                    </svg>
+                    <span>Reports</span>
+                </a>
+                <a href="compliance.html" class="nav-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span>Compliance</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <a class="nav-item" id="logout-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="admin-main">
+            <div class="admin-header">
+                <div>
+                    <h1>Cohort Intelligence</h1>
+                    <p style="color:var(--muted);font-size:14px;margin-top:4px">Aggregate analytics, early warning
+                        systems, and intervention mapping.</p>
+                </div>
+                <div class="admin-header-actions">
+                    <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme"></button>
+                    <select id="class-filter"
+                        style="font-family:'Outfit',sans-serif;font-size:13px;padding:8px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--soft);color:var(--text);cursor:pointer">
+                        <option value="">All Classes</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Stats Row 1 (Original) -->
+            <div class="stats-grid" style="margin-bottom:16px">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(74, 206, 160, 0.1);color:var(--C)">📈</div>
+                    <div class="stat-label">Avg Academic Stability</div>
+                    <div class="stat-value" id="stat-stability">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(232, 92, 122, 0.1);color:rgba(232, 92, 122, 1)">🔥
+                    </div>
+                    <div class="stat-label">Avg Burnout Risk</div>
+                    <div class="stat-value" id="stat-burnout">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(232, 146, 74, 0.1);color:var(--O)">🧠</div>
+                    <div class="stat-label">Avg Emotional Volatility</div>
+                    <div class="stat-value" id="stat-volatility">0%</div>
+                </div>
+            </div>
+
+            <!-- Stats Row 2 (New CGI / Dropout) -->
+            <div class="stats-grid" style="margin-bottom:32px">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(123,156,245,0.1);color:#7b9cf5">📊</div>
+                    <div class="stat-label">Avg CGI Score</div>
+                    <div class="stat-value" id="stat-cgi">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(74,206,160,0.1);color:#4acea0">⬆</div>
+                    <div class="stat-label">Top Improvers</div>
+                    <div class="stat-value" id="stat-improvers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="background:rgba(232,92,122,0.1);color:#e85c7a">⚠</div>
+                    <div class="stat-label">Dropout Risk Count</div>
+                    <div class="stat-value" id="stat-dropout">0</div>
+                </div>
+            </div>
+
+            <!-- CGI Class Growth Panel -->
+            <div class="ci-panel" id="cgi-panel">
+                <h3>📈 Cognitive Growth Overview</h3>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:20px">Average CGI scores and top improvers
+                    across the cohort.</p>
+                <div class="ci-metrics-row" id="cgi-metrics"></div>
+            </div>
+
+            <!-- Escalation Alerts Panel -->
+            <div class="ci-panel" id="escalation-panel">
+                <h3><span style="color:#e85c7a">!</span> Escalation Alerts</h3>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Engine-generated alerts from cognitive
+                    intelligence analysis — risk spikes, emotional instabilities, and CGI declines.</p>
+                <div class="ci-severity-filters">
+                    <button class="ci-sev-btn active" data-sev="all" onclick="filterAlerts('all')">All</button>
+                    <button class="ci-sev-btn" data-sev="critical" onclick="filterAlerts('critical')">Critical</button>
+                    <button class="ci-sev-btn" data-sev="high" onclick="filterAlerts('high')">High</button>
+                    <button class="ci-sev-btn" data-sev="medium" onclick="filterAlerts('medium')">Medium</button>
+                </div>
+                <div id="escalation-container"></div>
+            </div>
+
+            <!-- Early Warning System (Original, Enhanced) -->
+            <div style="margin-bottom: 40px; animation: fadeUp 0.5s ease both;">
+                <h3
+                    style="font-family:'Playfair Display', serif; font-size: 22px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                    <span style="color: rgba(232, 92, 122, 1)">!</span> Early Warning System
+                </h3>
+                <p style="color: var(--muted); font-size: 14px; margin-bottom: 20px;">Flagged students who exhibit high
+                    risk profiles based on computational psychometrics.</p>
+                <div id="ews-container"></div>
+            </div>
+
+            <!-- Intervention Effectiveness Panel -->
+            <div class="ci-panel" id="intv-effectiveness-panel">
+                <h3>🎯 Intervention Effectiveness</h3>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Aggregated intervention success rates
+                    and improvement metrics across the cohort.</p>
+                <div class="ci-metrics-row" id="intv-metrics"></div>
+            </div>
+
+            <!-- Dropout Risk Segmentation -->
+            <div class="ci-panel" id="dropout-panel">
+                <h3>🔮 Dropout Risk Segmentation</h3>
+                <p style="color:var(--muted);font-size:14px;margin-bottom:16px">Students categorized by predicted
+                    dropout risk probability.</p>
+                <div class="ci-metrics-row" id="dropout-metrics"></div>
+                <div id="dropout-list" style="margin-top:16px"></div>
+            </div>
+
+            <!-- Intervention Mapping (Original) -->
+            <div style="margin-bottom: 40px; animation: fadeUp 0.6s ease both;">
+                <h3 style="font-family:'Playfair Display', serif; font-size: 22px; margin-bottom: 16px;">Intervention
+                    Mapping</h3>
+                <div class="intervention-grid" id="intervention-container"></div>
+            </div>
+
+        </main>
+    </div>
+
+    <script type="module">
+        import { getClasses, getAllStudents } from '../js/storage.js';
+        import { requireAdmin, logout } from '../js/session.js';
+        import { hasPermission } from '../js/rbac.js';
+        import { initThemeToggle } from '../js/ui.js';
+
+        const session = requireAdmin();
+        if (!session) throw new Error('Redirecting...');
+        initThemeToggle();
+
+        // RBAC UI Filtering
+        if (!hasPermission(session.role, 'edit_students')) {
+            document.querySelectorAll('a[href="import.html"], a[href="classes.html"]').forEach(el => el.style.display = 'none');
+        }
+
+        // Hide Cohort Analytics if unauthorized (optional if counselor needs it, we mapped counselor to have some access? Counselor is read-only. Let's let read-only see analytics).
+
+        let classes = getClasses(session.schoolCode);
+        let allStudents = getAllStudents(session.schoolCode);
+
+        // Filter by role scope
+        if (session.role === 'teacher' && session.teacherClass) {
+            classes = classes.filter(c => c.className === session.teacherClass);
+            allStudents = allStudents.filter(s => s.className === session.teacherClass);
+        }
+
+        const filterEl = document.getElementById('class-filter');
+        classes.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.className;
+            opt.textContent = c.className;
+            filterEl.appendChild(opt);
+        });
+
+        function render(classFilter) {
+            const students = classFilter ? allStudents.filter(s => s.className === classFilter) : allStudents;
+            const assessed = students.filter(s => s.psychometricCompleted && s.attempts);
+
+            // Get latest attempt for each assessed student
+            const validProfiles = assessed.map(s => {
+                const attemptsList = Object.values(s.attempts).sort((a, b) => new Date(b.startedAt) - new Date(a.startedAt));
+                return {
+                    student: s,
+                    latest: attemptsList[0]
+                };
+            }).filter(d => d.latest && d.latest.computedInsights && d.latest.computedInsights.predictiveIndices);
+
+            if (validProfiles.length === 0) {
+                document.getElementById('stat-stability').textContent = 'N/A';
+                document.getElementById('stat-burnout').textContent = 'N/A';
+                document.getElementById('stat-volatility').textContent = 'N/A';
+                document.getElementById('ews-container').innerHTML = '<div style="color:var(--muted); font-size: 14px; padding: 20px; text-align: center; border: 1px solid var(--border); border-radius: 8px;">No sufficient psychometric data collected yet.</div>';
+                document.getElementById('intervention-container').innerHTML = '';
+                return;
+            }
+
+            let sumStab = 0, sumBurn = 0, sumVol = 0;
+            const flags = [];
+            const tracks = {
+                counseling: [],
+                leadership: [],
+                academic: []
+            };
+
+            validProfiles.forEach(({ student, latest }) => {
+                const pi = latest.computedInsights.predictiveIndices;
+                sumStab += pi.academicStability;
+                sumBurn += pi.burnoutRisk;
+                sumVol += pi.emotionalVolatility;
+
+                // Evaluate flags
+                if (pi.burnoutRisk >= 65) {
+                    flags.push({ s: student, flag: 'Critical Burnout Risk', val: pi.burnoutRisk });
+                    tracks.counseling.push(student);
+                }
+                if (pi.emotionalVolatility >= 70) {
+                    flags.push({ s: student, flag: 'High Emotional Volatility', val: pi.emotionalVolatility });
+                    if (!tracks.counseling.includes(student)) tracks.counseling.push(student);
+                }
+                if (pi.academicStability <= 40) {
+                    flags.push({ s: student, flag: 'Low Academic Stability', val: pi.academicStability });
+                    tracks.academic.push(student);
+                }
+                if (pi.leadershipIndex >= 70) {
+                    tracks.leadership.push(student);
+                }
+            });
+
+            // Update stats
+            document.getElementById('stat-stability').textContent = Math.round(sumStab / validProfiles.length) + '%';
+            document.getElementById('stat-burnout').textContent = Math.round(sumBurn / validProfiles.length) + '%';
+            document.getElementById('stat-volatility').textContent = Math.round(sumVol / validProfiles.length) + '%';
+
+            // Render EWS
+            const ewsContainer = document.getElementById('ews-container');
+            if (flags.length === 0) {
+                ewsContainer.innerHTML = '<div style="color:var(--success); font-size: 14px; padding: 20px; text-align: center; border: 1px solid var(--border); border-radius: 8px;">No critical warning flags detected in this cohort.</div>';
+            } else {
+                ewsContainer.innerHTML = flags.sort((a, b) => b.val - a.val).map(f => `
+                    <div class="warning-card">
+                        <div class="w-info">
+                            <h4>${f.s.name}</h4>
+                            <p>${f.s.className} · ID: ${f.s.studentId}</p>
+                        </div>
+                        <div class="w-flag">${f.flag} (${f.val}%)</div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Tracks
+            const trackContainer = document.getElementById('intervention-container');
+            trackContainer.innerHTML = `
+                <div class="intervention-track">
+                    <div class="it-header"><span style="color:rgba(232, 92, 122, 1)">❤️</span> Counseling Priority</div>
+                    <ul class="it-list">
+                        ${tracks.counseling.length ? tracks.counseling.map(s => `
+                            <li>
+                                <span>${s.name} <small style="color:var(--muted)">(${s.className})</small></span>
+                                <a href="student-analysis.html?studentId=${s.studentId}">View Profile</a>
+                            </li>
+                        `).join('') : '<li style="color:var(--muted); justify-content:center">No students flagged</li>'}
+                    </ul>
+                </div>
+
+                <div class="intervention-track">
+                    <div class="it-header"><span style="color:var(--E)">🌟</span> Leadership Development</div>
+                    <ul class="it-list">
+                        ${tracks.leadership.length ? tracks.leadership.map(s => `
+                            <li>
+                                <span>${s.name} <small style="color:var(--muted)">(${s.className})</small></span>
+                                <a href="student-analysis.html?studentId=${s.studentId}">View Profile</a>
+                            </li>
+                        `).join('') : '<li style="color:var(--muted); justify-content:center">No students flagged</li>'}
+                    </ul>
+                </div>
+
+                <div class="intervention-track">
+                    <div class="it-header"><span style="color:var(--C)">📚</span> Academic Support Watchlist</div>
+                    <ul class="it-list">
+                        ${tracks.academic.length ? tracks.academic.map(s => `
+                            <li>
+                                <span>${s.name} <small style="color:var(--muted)">(${s.className})</small></span>
+                                <a href="student-analysis.html?studentId=${s.studentId}">View Profile</a>
+                            </li>
+                        `).join('') : '<li style="color:var(--muted); justify-content:center">No students flagged</li>'}
+                    </ul>
+                </div>
+            `;
+
+            // ═══════════════════════════════════════════════════
+            // COGNITIVE INTELLIGENCE PANELS
+            // ═══════════════════════════════════════════════════
+
+            // ── CGI Stats & Metrics ──
+            let cgiSum = 0, cgiCount = 0, improvers = 0;
+            const cgiStudents = [];
+            students.forEach(s => {
+                if (s.longitudinal && s.longitudinal.yearlyIndex && s.longitudinal.yearlyIndex.length > 0) {
+                    const latest = s.longitudinal.yearlyIndex[s.longitudinal.yearlyIndex.length - 1];
+                    cgiSum += latest.score;
+                    cgiCount++;
+                    cgiStudents.push({ name: s.name, score: latest.score, delta: s.longitudinal.delta || 0, className: s.className, studentId: s.studentId });
+                    if (s.longitudinal.delta > 0) improvers++;
+                }
+            });
+
+            document.getElementById('stat-cgi').textContent = cgiCount > 0 ? Math.round(cgiSum / cgiCount) + '%' : '—';
+            document.getElementById('stat-improvers').textContent = String(improvers);
+
+            // CGI metrics panel
+            const cgiMetricsEl = document.getElementById('cgi-metrics');
+            if (cgiCount > 0) {
+                const avgCGI = Math.round(cgiSum / cgiCount);
+                const topStudents = cgiStudents.sort((a, b) => b.delta - a.delta).slice(0, 5);
+                cgiMetricsEl.innerHTML = `
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#7b9cf5">${avgCGI}</div><div class="ci-metric-lbl">Avg CGI</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#4acea0">${improvers}</div><div class="ci-metric-lbl">Improving</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#e8924a">${cgiCount - improvers}</div><div class="ci-metric-lbl">Stable/Declining</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val">${cgiCount}</div><div class="ci-metric-lbl">Tracked</div></div>
+                `;
+            } else {
+                cgiMetricsEl.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:16px;text-align:center">No CGI data available yet. Students need to complete assessments.</div>';
+            }
+
+            // ── Escalation Alerts ──
+            const allAlerts = [];
+            students.forEach(s => {
+                if (s.alerts && s.alerts.length > 0) {
+                    s.alerts.filter(a => !a.resolved).forEach(a => {
+                        allAlerts.push({ student: s, alert: a });
+                    });
+                }
+            });
+
+            window._allAlerts = allAlerts; // store for filtering
+            renderEscalationAlerts(allAlerts, 'all');
+
+            // ── Intervention Effectiveness ──
+            let intvCount = 0, intvSuccessSum = 0, intvImprovSum = 0, intvEngageSum = 0;
+            students.forEach(s => {
+                if (s.interventionAnalytics) {
+                    const ia = s.interventionAnalytics;
+                    intvCount++;
+                    intvSuccessSum += ia.successRate || 0;
+                    intvImprovSum += ia.avgImprovement || 0;
+                    intvEngageSum += ia.engagementRate || 0;
+                }
+            });
+
+            const intvMetricsEl = document.getElementById('intv-metrics');
+            if (intvCount > 0) {
+                intvMetricsEl.innerHTML = `
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#4acea0">${Math.round(intvSuccessSum / intvCount)}%</div><div class="ci-metric-lbl">Avg Success Rate</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#7b9cf5">${(intvImprovSum / intvCount).toFixed(1)}</div><div class="ci-metric-lbl">Avg Improvement</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#b07cf5">${Math.round(intvEngageSum / intvCount)}%</div><div class="ci-metric-lbl">Avg Engagement</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val">${intvCount}</div><div class="ci-metric-lbl">Students Tracked</div></div>
+                `;
+            } else {
+                intvMetricsEl.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:16px;text-align:center">No intervention effectiveness data available yet.</div>';
+            }
+
+            // ── Dropout Risk Segmentation ──
+            const dropoutBuckets = { Low: [], Medium: [], High: [] };
+            students.forEach(s => {
+                if (s.dropoutPrediction) {
+                    const cat = s.dropoutPrediction.category || 'Low';
+                    if (dropoutBuckets[cat]) {
+                        dropoutBuckets[cat].push({ name: s.name, className: s.className, studentId: s.studentId, score: s.dropoutPrediction.probabilityScore });
+                    }
+                }
+            });
+
+            const dropoutTotal = dropoutBuckets.Low.length + dropoutBuckets.Medium.length + dropoutBuckets.High.length;
+            document.getElementById('stat-dropout').textContent = String(dropoutBuckets.High.length + dropoutBuckets.Medium.length);
+
+            const dropoutMetricsEl = document.getElementById('dropout-metrics');
+            const dropoutListEl = document.getElementById('dropout-list');
+            if (dropoutTotal > 0) {
+                dropoutMetricsEl.innerHTML = `
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#4acea0">${dropoutBuckets.Low.length}</div><div class="ci-metric-lbl">Low Risk</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#e8924a">${dropoutBuckets.Medium.length}</div><div class="ci-metric-lbl">Medium Risk</div></div>
+                    <div class="ci-metric"><div class="ci-metric-val" style="color:#e85c7a">${dropoutBuckets.High.length}</div><div class="ci-metric-lbl">High Risk</div></div>
+                `;
+
+                const atRisk = [...dropoutBuckets.High, ...dropoutBuckets.Medium].sort((a, b) => b.score - a.score);
+                if (atRisk.length > 0) {
+                    dropoutListEl.innerHTML = atRisk.map(s => {
+                        const color = s.score >= 65 ? '#e85c7a' : '#e8924a';
+                        return `
+                            <div class="warning-card" style="border-left-color:${color}">
+                                <div class="w-info">
+                                    <h4>${s.name}</h4>
+                                    <p>${s.className} · ID: ${s.studentId}</p>
+                                </div>
+                                <div class="w-flag" style="background:${color}15;color:${color}">${s.score}% Risk</div>
+                            </div>`;
+                    }).join('');
+                } else {
+                    dropoutListEl.innerHTML = '';
+                }
+            } else {
+                dropoutMetricsEl.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:16px;text-align:center">No dropout prediction data available yet.</div>';
+                dropoutListEl.innerHTML = '';
+            }
+        }
+
+        // ── Escalation Alert Renderer ──
+        function renderEscalationAlerts(alerts, severityFilter) {
+            const filtered = severityFilter === 'all' ? alerts : alerts.filter(a => a.alert.severity === severityFilter);
+            const container = document.getElementById('escalation-container');
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="color:var(--muted);font-size:14px;padding:16px;text-align:center;border:1px solid var(--border);border-radius:8px">No escalation alerts at this severity level.</div>';
+                return;
+            }
+
+            container.innerHTML = filtered
+                .sort((a, b) => new Date(b.alert.timestamp) - new Date(a.alert.timestamp))
+                .map(({ student, alert }) => {
+                    const sevClass = alert.severity === 'critical' ? 'crit' : alert.severity === 'high' ? 'high' : 'med';
+                    return `
+                        <div class="warning-card severity-${alert.severity}">
+                            <div class="w-info">
+                                <h4>${student.name}</h4>
+                                <p>${student.className} · ${alert.type.replace(/_/g, ' ')} · ${new Date(alert.timestamp).toLocaleDateString()}</p>
+                            </div>
+                            <div class="w-flag ${sevClass}">${alert.severity} — ${alert.message}</div>
+                        </div>`;
+                }).join('');
+        }
+
+        // Global filter function for severity buttons
+        window.filterAlerts = function (sev) {
+            document.querySelectorAll('.ci-sev-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.sev === sev);
+            });
+            renderEscalationAlerts(window._allAlerts || [], sev);
+        };
+
+        render('');
+        filterEl.addEventListener('change', () => render(filterEl.value));
+
+        // Sidebar
+        document.getElementById('sidebar-toggle').addEventListener('click', () => {
+            document.getElementById('admin-layout').classList.toggle('collapsed');
+            document.getElementById('sidebar-toggle').textContent = document.getElementById('admin-layout').classList.contains('collapsed') ? '▸' : '◂';
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', () => logout(true));
+    </script>
+</body>
+
+</html>
